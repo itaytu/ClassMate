@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +35,14 @@ public class Register extends AppCompatActivity {
 
     private EditText mFullName, mEmail, mPassword, mPhone;
     private Button mRegisterButton;
+    private RadioGroup userRadioGroup;
+    private RadioButton userRadioButton;
     //TODO need to add on click to back to login
     private TextView mLoginButton;
     private  String userId;
     private boolean eflag, pflag;
     private FirebaseAuth fAuth;
-    private FirebaseFirestore fstore;
+    private FirebaseFirestore fStore;
     private ProgressBar progressBar;
 
 
@@ -53,9 +57,10 @@ public class Register extends AppCompatActivity {
         mPhone = findViewById(R.id.phone_textView);
         mRegisterButton = findViewById(R.id.register_button);
         mLoginButton = findViewById(R.id.go_to_login_button);
+        userRadioGroup = findViewById(R.id.userType_radioGroup);
 
         fAuth = FirebaseAuth.getInstance();
-        fstore=FirebaseFirestore.getInstance();
+        fStore=FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar_button);
 
         InitListeners();
@@ -111,6 +116,7 @@ public class Register extends AppCompatActivity {
         });
     }
 
+
     protected void register() {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,10 +125,18 @@ public class Register extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 final String fullName = mFullName.getText().toString();
                 final String phone = mPhone.getText().toString();
+                boolean isTeacher = false;
+                boolean isStudent = false;
 
+                if(userRadioButton.getText().equals(findViewById(R.id.isTeacher_radioButton).toString()))
+                    isTeacher = true;
+                else
+                    isStudent = true;
                 if(pflag && eflag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
                     progressBar.setVisibility(View.VISIBLE);
+                    final int finalIsTeacher = isTeacher ? 1 : 0;
+                    final int finalIsStudent = isStudent ? 1 : 0;
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -130,20 +144,22 @@ public class Register extends AppCompatActivity {
                                 Log.d("REGISTER", "Task Completed");
                                 Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
                                 userId=fAuth.getCurrentUser().getUid();
-                                DocumentReference documentReference = fstore.collection("users").document(userId);
-                                Map<String,Object> user = new HashMap<>();
-                                user.put("Full-Name",fullName);
-                                user.put("Email",email);
-                                user.put("Phone",phone);
+                                DocumentReference documentReference = fStore.collection("users").document(userId);
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("Full-Name", fullName);
+                                user.put("Email", email);
+                                user.put("Phone", phone);
+                                user.put("isTeacher", finalIsTeacher);
+                                user.put("isStudent", finalIsStudent);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d("REGISTER", "User profile is created" +userId);
+                                        Log.d("REGISTER", "User profile is created" + userId);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d("REGISTER", "on failure" +e.toString());
+                                        Log.d("REGISTER", "on failure" + e.toString());
 
                                     }
                                 });
@@ -155,12 +171,10 @@ public class Register extends AppCompatActivity {
                             }
                         }
                     });
-
                 }
                 else {
                     mRegisterButton.setError("Please check your Email and Password");
                 }
-
             }
         });
     }
@@ -174,6 +188,7 @@ public class Register extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
+
     private final static boolean isValidPassword(CharSequence target) {
         if(target == null || target.length() < 8)
             return false;
@@ -182,4 +197,10 @@ public class Register extends AppCompatActivity {
     }
 
 
+    public void checkButton(View view) {
+        int radioID = userRadioGroup.getCheckedRadioButtonId();
+
+        userRadioButton = findViewById(radioID);
+
+    }
 }
