@@ -55,7 +55,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/email"
-        android:inputType=""
+        android:inputType="textEmailAddress"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -87,7 +87,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Phone"
-        android:inputType="textPhonetic"
+        android:inputType="phone"
         android:padding="10dp"
         android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,18 +100,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="76dp"
         android:layout_marginEnd="16dp"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone_textView" />
 
     <TextView
         android:id="@+id/go_to_login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_width="88dp"
+        android:layout_height="22dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -131,5 +131,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/go_to_login_button" />
+
+    <RadioGroup
+        android:id="@+id/userType_radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/register_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_textView">
+
+        <RadioButton
+            android:id="@+id/isTeacher_radioButton"
+            android:layout_width="94dp"
+            android:layout_height="match_parent"
+            android:text="Teacher"
+            android:onClick="checkButton"/>
+
+        <RadioButton
+            android:id="@+id/isStudent_radioButton"
+            android:layout_width="94dp"
+            android:layout_height="match_parent"
+            android:text="Student"
+            android:onClick="checkButton"
+            android:checked="true"/>
+    </RadioGroup>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
