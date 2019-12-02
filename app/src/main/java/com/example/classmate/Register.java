@@ -18,18 +18,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
     private EditText mFullName, mEmail, mPassword, mPhone;
     private Button mRegisterButton;
+    //TODO need to add on click to back to login
     private TextView mLoginButton;
-
+    private  String userId;
     private boolean eflag, pflag;
     private FirebaseAuth fAuth;
+    private FirebaseFirestore fstore;
     private ProgressBar progressBar;
 
 
@@ -46,6 +55,7 @@ public class Register extends AppCompatActivity {
         mLoginButton = findViewById(R.id.go_to_login_button);
 
         fAuth = FirebaseAuth.getInstance();
+        fstore=FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar_button);
 
         InitListeners();
@@ -105,8 +115,10 @@ public class Register extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmail.getText().toString().trim();
+                final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
+                final String fullName = mFullName.getText().toString();
+                final String phone = mPhone.getText().toString();
 
                 if(pflag && eflag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
@@ -117,6 +129,24 @@ public class Register extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 Log.d("REGISTER", "Task Completed");
                                 Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
+                                userId=fAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fstore.collection("users").document(userId);
+                                Map<String,Object> user = new HashMap<>();
+                                user.put("Full-Name",fullName);
+                                user.put("Email",email);
+                                user.put("Phone",phone);
+                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("REGISTER", "User profile is created" +userId);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("REGISTER", "on failure" +e.toString());
+
+                                    }
+                                });
                                 Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                                 startActivity(intent);
                             }
