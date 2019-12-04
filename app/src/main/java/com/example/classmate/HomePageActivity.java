@@ -50,8 +50,8 @@ public class HomePageActivity extends AppCompatActivity {
 
     }
 
-    public void logout(View view) {
-        Intent intent = new Intent(getApplicationContext(), Login.class);
-        startActivity(intent);
-    }
+//    public void logout(View view) {
+//        Intent intent = new Intent(getApplicationContext(), Login.class);
+//        startActivity(intent);
+//    }
 }

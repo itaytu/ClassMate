@@ -196,7 +196,10 @@ public class Register extends AppCompatActivity {
         return true;
     }
 
-
+    public void backTOlogin(View v){
+        Intent intent = new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+    }
     public void checkButton(View view) {
         int radioID = userRadioGroup.getCheckedRadioButtonId();
 
