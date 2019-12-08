@@ -163,7 +163,7 @@ public class Register extends AppCompatActivity {
 
                                     }
                                 });
-                                Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), Skills.class);
                                 startActivity(intent);
                             }
                             else {
