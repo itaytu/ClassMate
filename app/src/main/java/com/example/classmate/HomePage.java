@@ -17,7 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import javax.annotation.Nullable;
 
-public class HomePageActivity extends AppCompatActivity {
+public class HomePage extends AppCompatActivity {
 
     private TextView fullName , email ,phone;
     private FirebaseAuth fAuth;
@@ -26,7 +26,7 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page2);
+        setContentView(R.layout.activity_home_page);
 
         fullName = findViewById(R.id.profileName);
         email = findViewById(R.id.profileEmail);

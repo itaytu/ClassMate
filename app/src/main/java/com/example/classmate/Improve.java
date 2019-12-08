@@ -106,7 +106,7 @@ public class Improve extends AppCompatActivity {
 
                                               documentReference.update("improve",myImproves);
 //                                              documentReference.set(myImproves);
-                                              Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                                              Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                               startActivity(intent);
                                           }
                                       }

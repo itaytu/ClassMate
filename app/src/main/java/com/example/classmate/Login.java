@@ -28,7 +28,7 @@ public class Login extends AppCompatActivity {
     private EditText passwordEditText;
     private boolean pflag = false, eflag = false;
     private FirebaseAuth mAuth;
-    private static final String TAG = "mainActivity";
+    private static final String TAG = "Login";
 
 
     @Override
@@ -130,7 +130,7 @@ public class Login extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
 //                            FirebaseUser user = mAuth.getCurrentUser();
 //                            updateUI(user);
-                            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), HomePage.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
