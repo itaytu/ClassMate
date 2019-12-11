@@ -77,10 +77,10 @@ public class Improve extends AppCompatActivity {
                                           public void onClick(View v) {
 
                                               userId = fAuth.getCurrentUser().getUid();
-                                              DocumentReference documentReference = fStore.collection("skillsANDdemands").document(userId);
+                                              DocumentReference documentReference = fStore.collection("users").document(userId);
 //                Set<String> myImproves = new HashSet<>();
                                               List<String> improveList = new LinkedList<>();
-                                              Map<String, List<String>> myImproves = new HashMap<>();
+//                                              Map<String, List<String>> myImproves = new HashMap<>();
 
                                               if(english.isChecked())
                                                   improveList.add("english");
@@ -102,9 +102,9 @@ public class Improve extends AppCompatActivity {
                                                   improveList.add("programming");
                                               if(biology.isChecked())
                                                   improveList.add("biology");
-                                              myImproves.put("improve",improveList);
+//                                              myImproves.put("improve",improveList);
 
-                                              documentReference.update("improve",myImproves);
+                                              documentReference.update("improve",improveList);
 //                                              documentReference.set(myImproves);
                                               Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                               startActivity(intent);

@@ -77,10 +77,10 @@ public class Skills extends AppCompatActivity {
             public void onClick(View v) {
 
                 userId = fAuth.getCurrentUser().getUid();
-                DocumentReference documentReference = fStore.collection("skillsANDdemands").document(userId);
+                DocumentReference documentReference = fStore.collection("users").document(userId);
 //                Set<String> mySkill = new HashSet<>();
                 List<String> skillsList = new LinkedList<>();
-                Map<String, List<String>> mySkill = new HashMap<>();
+//                Map<String, List<String>> mySkill = new HashMap<>();
 
                 if(english.isChecked())
                     skillsList.add("english");
@@ -102,9 +102,9 @@ public class Skills extends AppCompatActivity {
                     skillsList.add("programming");
                 if(biology.isChecked())
                     skillsList.add("biology");
-                mySkill.put("skills",skillsList);
-
-                documentReference.set(mySkill);
+//                mySkill.put("skillsANDdemands",skillsList);
+                documentReference.update("skills",skillsList);
+//                documentReference.set(mySkill);
                 Intent intent = new Intent(getApplicationContext(), Improve.class);
                 startActivity(intent);
             }
