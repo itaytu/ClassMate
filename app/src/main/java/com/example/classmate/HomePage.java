@@ -3,14 +3,11 @@ package com.example.classmate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -22,8 +19,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -47,9 +42,7 @@ public class HomePage extends AppCompatActivity {
         fStore = FirebaseFirestore.getInstance();
 
         useId = fAuth.getCurrentUser().getUid();
-//////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////
         DocumentReference documentReference = fStore.collection("users").document(useId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -59,7 +52,6 @@ public class HomePage extends AppCompatActivity {
                 fullName.setText(documentSnapshot.getString("Full-Name"));
                 email.setText(documentSnapshot.getString("Email"));
 
-                ////////////////////////////////////////
                 fStore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -82,33 +74,10 @@ public class HomePage extends AppCompatActivity {
                         }
                     }
                 });
-                /////////////////////////////////////////////
+
             }
 
         });
-
-//        fStore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d("bibi", "********************");
-//                    List<String> list = new ArrayList<>();
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        list = (List<String>) document.get("skills");
-//                    }
-//                    Log.d("bibi", "%%%%%%%%%%%%%%%%%%%%%%%%%");
-//                    Log.d("list", list.toString());
-//                } else {
-//                    Log.d("list", "Error getting documents: ", task.getException());
-//                }
-//            }
-//        });
-
-
-//    public void logout(View view) {
-//        Intent intent = new Intent(getApplicationContext(), Login.class);
-//        startActivity(intent);
-//    }
 
     }
 }

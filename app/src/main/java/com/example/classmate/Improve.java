@@ -1,31 +1,19 @@
 package com.example.classmate;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Improve extends AppCompatActivity {
 
@@ -78,9 +66,7 @@ public class Improve extends AppCompatActivity {
 
                                               userId = fAuth.getCurrentUser().getUid();
                                               DocumentReference documentReference = fStore.collection("users").document(userId);
-//                Set<String> myImproves = new HashSet<>();
                                               List<String> improveList = new LinkedList<>();
-//                                              Map<String, List<String>> myImproves = new HashMap<>();
 
                                               if(english.isChecked())
                                                   improveList.add("english");
@@ -102,10 +88,8 @@ public class Improve extends AppCompatActivity {
                                                   improveList.add("programming");
                                               if(biology.isChecked())
                                                   improveList.add("biology");
-//                                              myImproves.put("improve",improveList);
 
                                               documentReference.update("improve",improveList);
-//                                              documentReference.set(myImproves);
                                               Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                               startActivity(intent);
                                           }

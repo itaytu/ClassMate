@@ -1,31 +1,19 @@
 package com.example.classmate;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class Skills extends AppCompatActivity {
 
@@ -78,9 +66,7 @@ public class Skills extends AppCompatActivity {
 
                 userId = fAuth.getCurrentUser().getUid();
                 DocumentReference documentReference = fStore.collection("users").document(userId);
-//                Set<String> mySkill = new HashSet<>();
                 List<String> skillsList = new LinkedList<>();
-//                Map<String, List<String>> mySkill = new HashMap<>();
 
                 if(english.isChecked())
                     skillsList.add("english");
@@ -102,9 +88,7 @@ public class Skills extends AppCompatActivity {
                     skillsList.add("programming");
                 if(biology.isChecked())
                     skillsList.add("biology");
-//                mySkill.put("skillsANDdemands",skillsList);
                 documentReference.update("skills",skillsList);
-//                documentReference.set(mySkill);
                 Intent intent = new Intent(getApplicationContext(), Improve.class);
                 startActivity(intent);
             }

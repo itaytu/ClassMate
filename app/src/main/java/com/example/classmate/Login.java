@@ -128,8 +128,6 @@ public class Login extends AppCompatActivity {
                             eflag=pflag=true;
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
                             Intent intent = new Intent(getApplicationContext(), HomePage.class);
                             startActivity(intent);
                         } else {
@@ -137,10 +135,8 @@ public class Login extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(Login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
                         }
 
-                        // ...
                     }
                 });
     }
@@ -169,12 +165,6 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
-//    private void goTOregister(View view){
-//        Log.d(TAG, "signInWithEmail:success");
-//        Intent intent = new Intent(getApplicationContext(), Register.class);
-//        startActivity(intent);
-//    }
 
     @Override
     public void onBackPressed() {}
