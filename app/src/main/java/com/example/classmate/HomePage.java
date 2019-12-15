@@ -3,8 +3,11 @@ package com.example.classmate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +32,11 @@ public class HomePage extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String useId;
+    private List<String> skillsList = new ArrayList<>();
+    private List<String> improvesList = new ArrayList<>();
+    private String stringImproves="";
+    private String stringSkills="";
+    private Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +48,7 @@ public class HomePage extends AppCompatActivity {
         improves= findViewById(R.id.improves);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-
+        button= findViewById(R.id.logout_button);
         useId = fAuth.getCurrentUser().getUid();
 
         DocumentReference documentReference = fStore.collection("users").document(useId);
@@ -48,36 +56,45 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Log.d("PROFILE", "here");
-                phone.setText(documentSnapshot.getString("Phone"));
-                fullName.setText(documentSnapshot.getString("Full-Name"));
-                email.setText(documentSnapshot.getString("Email"));
+                phone.append(documentSnapshot.getString("Phone"));
+                fullName.append(documentSnapshot.getString("Full-Name"));
+                email.append(documentSnapshot.getString("Email"));
+                skillsList = (List<String>) documentSnapshot.get("skills");
+                improvesList = (List<String>) documentSnapshot.get("improve");
+                for(String s :skillsList){
+                    if (stringSkills.isEmpty()){
+                        stringSkills = stringSkills+s;
+                    }else
+                    stringSkills = stringSkills+ " ," +s ;
 
-                fStore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<String> skillsList = new ArrayList<>();
-                            List<String> improvesList = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getId().equals(useId)) {
-                                    Log.d("myid", document.getId());
-                                    skillsList = (List<String>) document.get("skills");
-                                    improvesList = (List<String>) document.get("improve");
-                                    break;
-                                }
-                            }
-                            skills.setText(skillsList.toString());
-                            improves.setText(improvesList.toString());
-                            Log.d("list", skillsList.toString());
-                        } else {
-                            Log.d("list", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
+                }
+                for (String s:improvesList){
+                    if (stringImproves.isEmpty()){
+                        stringImproves = stringImproves+s;
+                    }else
+                    stringImproves = stringImproves+ " ," +s ;
+                }
+                skills.append(stringSkills);
+                improves.append(stringImproves);
             }
 
         });
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                fAuth.signOut();
+//                Intent intent = new Intent(getApplicationContext(), Login.class);
+//                startActivity(intent);
+//            }
+//        });
 
     }
+    @Override
+    public void onBackPressed() {
+
+//        fAuth.signOut();
+        Intent intent = new Intent(getApplicationContext(), Login.class);
+        startActivity(intent);
+    }
+
 }

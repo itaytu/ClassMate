@@ -44,6 +44,9 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private ProgressBar progressBar;
+    boolean isTeacher = false;
+    boolean isStudent = false;
+
 
 
     @Override
@@ -125,18 +128,23 @@ public class Register extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 final String fullName = mFullName.getText().toString();
                 final String phone = mPhone.getText().toString();
-                boolean isTeacher = false;
-                boolean isStudent = false;
 
-                if(userRadioButton.getText().equals(findViewById(R.id.isTeacher_radioButton).toString()))
+
+                if(userRadioButton.getText().equals("Teacher")) {
+                    Log.d("REGISTER", findViewById(R.id.isTeacher_radioButton).toString());
+                    Log.d("REGISTER", userRadioButton.getText().toString());
                     isTeacher = true;
-                else
+                }
+                else {
+                    Log.d("REGISTER", findViewById(R.id.isStudent_radioButton).toString());
+                    Log.d("REGISTER", userRadioButton.getText().toString());
                     isStudent = true;
+                }
                 if(pflag && eflag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
                     progressBar.setVisibility(View.VISIBLE);
-                    final int finalIsTeacher = isTeacher ? 1 : 0;
-                    final int finalIsStudent = isStudent ? 1 : 0;
+//                    final int finalIsTeacher = isTeacher ? 1 : 0;
+//                    final int finalIsStudent = isStudent ? 1 : 0;
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -149,8 +157,8 @@ public class Register extends AppCompatActivity {
                                 user.put("Full-Name", fullName);
                                 user.put("Email", email);
                                 user.put("Phone", phone);
-                                user.put("isTeacher", finalIsTeacher);
-                                user.put("isStudent", finalIsStudent);
+                                user.put("isTeacher", isTeacher);
+                                user.put("isStudent", isStudent);
                                 documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -163,8 +171,15 @@ public class Register extends AppCompatActivity {
 
                                     }
                                 });
-                                Intent intent = new Intent(getApplicationContext(), Skills.class);
+                                Intent intent;
+                                if (isStudent) {
+                                     intent = new Intent(getApplicationContext(), Skills.class);
+                                }else
+                                {
+                                    intent = new Intent(getApplicationContext(),Teacher.class);
+                                }
                                 startActivity(intent);
+
                             }
                             else {
                                 Log.d("REGISTER", "onComplete: Failed=" + task.getException().getMessage());
