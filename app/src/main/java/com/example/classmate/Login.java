@@ -19,6 +19,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import javax.annotation.Nullable;
 
 public class Login extends AppCompatActivity {
 
@@ -29,7 +36,10 @@ public class Login extends AppCompatActivity {
     private boolean pflag = false, eflag = false;
     private FirebaseAuth mAuth;
     private static final String TAG = "Login";
-
+    private FirebaseFirestore firestore;
+    private String userId;
+    private Boolean teacherOrStudern;
+    private Number numTeacherOrStudern;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,7 @@ public class Login extends AppCompatActivity {
         // [START initialize_auth]
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        firestore=FirebaseFirestore.getInstance();
         // [END initialize_auth]
 
 
@@ -126,10 +137,26 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             eflag=pflag=true;
+                            userId = mAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference =firestore.collection("users").document(userId);
+                            documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                @Override
+                                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                    teacherOrStudern=documentSnapshot.getBoolean("isStudent");
+                                    Log.d("Login","is student : "+teacherOrStudern.booleanValue());
+                                    Intent intent;
+                                    if (teacherOrStudern.booleanValue()){
+                                        Log.d(TAG, "signInWithEmail:success");
+                                         intent = new Intent(getApplicationContext(), HomePage.class);
+
+                                    }else{
+                                         intent = new Intent(getApplicationContext(), Teacher.class);
+                                    }
+                                    startActivity(intent);
+                                }
+                            });
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                            startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
