@@ -37,7 +37,6 @@ public class Register extends AppCompatActivity {
     private Button mRegisterButton;
     private RadioGroup userRadioGroup;
     private RadioButton userRadioButton;
-    //TODO need to add on click to back to login
     private TextView mLoginButton;
     private  String userId;
     private boolean eflag, pflag;
@@ -64,8 +63,9 @@ public class Register extends AppCompatActivity {
 
         fAuth = FirebaseAuth.getInstance();
         fStore=FirebaseFirestore.getInstance();
-        progressBar = findViewById(R.id.progressBar_button);
+        progressBar = findViewById(R.id.progressBar);
 
+        progressBar.setVisibility(View.INVISIBLE);
         InitListeners();
         register();
     }
@@ -121,6 +121,7 @@ public class Register extends AppCompatActivity {
 
 
     protected void register() {
+        progressBar.setVisibility(View.VISIBLE);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,13 +132,9 @@ public class Register extends AppCompatActivity {
 
 
                 if(userRadioButton.getText().equals("Teacher")) {
-                    Log.d("REGISTER", findViewById(R.id.isTeacher_radioButton).toString());
-                    Log.d("REGISTER", userRadioButton.getText().toString());
                     isTeacher = true;
                 }
                 else {
-                    Log.d("REGISTER", findViewById(R.id.isStudent_radioButton).toString());
-                    Log.d("REGISTER", userRadioButton.getText().toString());
                     isStudent = true;
                 }
                 if(pflag && eflag){
@@ -217,7 +214,6 @@ public class Register extends AppCompatActivity {
     }
     public void checkButton(View view) {
         int radioID = userRadioGroup.getCheckedRadioButtonId();
-
         userRadioButton = findViewById(radioID);
 
     }

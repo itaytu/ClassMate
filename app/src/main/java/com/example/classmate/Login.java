@@ -38,8 +38,7 @@ public class Login extends AppCompatActivity {
     private static final String TAG = "Login";
     private FirebaseFirestore firestore;
     private String userId;
-    private Boolean teacherOrStudern;
-    private Number numTeacherOrStudern;
+    private Boolean teacherOrStudent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +58,8 @@ public class Login extends AppCompatActivity {
         firestore=FirebaseFirestore.getInstance();
         // [END initialize_auth]
 
-
         InitListeners();
         Login();
-
     }
 
     protected void InitListeners(){
@@ -137,15 +134,16 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             eflag=pflag=true;
+                            // Sign in success, update UI with the signed-in user's information
                             userId = mAuth.getCurrentUser().getUid();
                             DocumentReference documentReference =firestore.collection("users").document(userId);
-                            documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            documentReference.addSnapshotListener(Login.this,new EventListener<DocumentSnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                    teacherOrStudern=documentSnapshot.getBoolean("isStudent");
-                                    Log.d("Login","is student : "+teacherOrStudern.booleanValue());
+                                    teacherOrStudent =documentSnapshot.getBoolean("isStudent");
+                                    Log.d("Login","is student : "+ teacherOrStudent.booleanValue());
                                     Intent intent;
-                                    if (teacherOrStudern.booleanValue()){
+                                    if (teacherOrStudent.booleanValue()){
                                         Log.d(TAG, "signInWithEmail:success");
                                          intent = new Intent(getApplicationContext(), HomePage.class);
 
@@ -155,7 +153,6 @@ public class Login extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             });
-                            // Sign in success, update UI with the signed-in user's information
 
                         } else {
                             // If sign in fails, display a message to the user.

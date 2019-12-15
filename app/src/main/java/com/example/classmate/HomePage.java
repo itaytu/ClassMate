@@ -79,20 +79,20 @@ public class HomePage extends AppCompatActivity {
             }
 
         });
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                fAuth.signOut();
-//                Intent intent = new Intent(getApplicationContext(), Login.class);
-//                startActivity(intent);
-//            }
-//        });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fAuth.signOut();
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+            }
+        });
 
     }
     @Override
     public void onBackPressed() {
 
-//        fAuth.signOut();
+        fAuth.signOut();
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }

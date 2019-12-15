@@ -2,13 +2,14 @@ package com.example.classmate;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,62 +32,69 @@ public class Teacher extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
+        // Show all student that register to app.
         firestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+        @Override
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            ArrayList<Student> studentArrayList=new ArrayList<>();
+            String fullName ;
+            String email;
+            String phone;
+            List<String> skillsList=new ArrayList<>();
+            List<String> improveList=new ArrayList<>();
+            if (task.isSuccessful()){
+                for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                    if(documentSnapshot.getBoolean("isStudent").booleanValue()) {
+                        String skills="";
+                        String improve="";
+                        fullName = documentSnapshot.getString("Full-Name");
+                        email = documentSnapshot.getString("Email");
+                        phone = documentSnapshot.getString("Phone");
+                        skillsList = (List<String>) documentSnapshot.get("skills");
+                        improveList = (List<String>) documentSnapshot.get("improve");
+                        for(String s :skillsList){
+                            if (skills.isEmpty()){
+                                skills = skills+s;
+                            }else
+                                skills = skills+ " ," +s ;
 
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ArrayList<Student> studentArrayList=new ArrayList<>();
-                String fullName ;
-                String email;
-                String phone;
-                List<String> skillsList=new ArrayList<>();
-                List<String> improveList=new ArrayList<>();
-                if (task.isSuccessful()){
-                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                        if(documentSnapshot.getBoolean("isStudent").booleanValue()) {
-                            String skills="";
-                            String improve="";
-                            fullName = documentSnapshot.getString("Full-Name");
-                            email = documentSnapshot.getString("Email");
-                            phone = documentSnapshot.getString("Phone");
-                            skillsList = (List<String>) documentSnapshot.get("skills");
-                            improveList = (List<String>) documentSnapshot.get("improve");
-                            for(String s :skillsList){
-                                if (skills.isEmpty()){
-                                    skills = skills+s;
-                                }else
-                                    skills = skills+ " ," +s ;
-
-                            }
-                            for (String s:improveList){
-                                if (improve.isEmpty()){
-                                    improve = improve+s;
-                                }else
-                                    improve = improve+ " ," +s ;
-                            }
-
-                            Student student = new Student(fullName, email, phone,skills,improve);
-//                            Student student = new Student(fullName, email, phone);
-                            studentArrayList.add(student);
                         }
-                    }
-                    listView = findViewById(R.id.listView);
-                    Teacher_adapter teacher_adapter = new Teacher_adapter(Teacher.this,studentArrayList);
-                    listView.setAdapter(teacher_adapter);
-                }else{
-                    Log.d("Teacher class","Error",task.getException());
-                }
-            }
-        });
+                        for (String s:improveList){
+                            if (improve.isEmpty()){
+                                improve = improve+s;
+                            }else
+                                improve = improve+ " ," +s ;
+                        }
 
-    }
+                        Student student = new Student(fullName, email, phone,skills,improve);
+                        studentArrayList.add(student);
+//                            Student student = new Student(fullName, email, phone);
+                    }
+                }
+                listView = findViewById(R.id.listView);
+                Teacher_adapter teacher_adapter = new Teacher_adapter(Teacher.this,studentArrayList);
+                listView.setAdapter(teacher_adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(Teacher.this,"position : "+ position,Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                Log.d("Teacher class","Error",task.getException());
+            }
+        }
+    });
+
+}
 
     @Override
     public void onBackPressed() {
-//        firebaseAuth.signOut();
+        firebaseAuth.signOut();
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
 
     }
 }
+

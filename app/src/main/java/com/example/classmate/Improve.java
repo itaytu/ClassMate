@@ -33,22 +33,21 @@ public class Improve extends AppCompatActivity {
     private CheckBox programming;
     private CheckBox biology;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skills);
 
-        english = (CheckBox) findViewById(R.id.english);
-        french = (CheckBox) findViewById(R.id.french);
-        hebrew = (CheckBox) findViewById(R.id.hebrew);
-        spanish = (CheckBox) findViewById(R.id.spanish);
-        arabic = (CheckBox) findViewById(R.id.arabic);
-        physics = (CheckBox) findViewById(R.id.physics);
-        math = (CheckBox) findViewById(R.id.math);
-        chemistry = (CheckBox) findViewById(R.id.chemistry);
-        programming = (CheckBox) findViewById(R.id.programming);
-        biology = (CheckBox) findViewById(R.id.biology);
+        english = findViewById(R.id.english);
+        french =  findViewById(R.id.french);
+        hebrew =  findViewById(R.id.hebrew);
+        spanish = findViewById(R.id.spanish);
+        arabic =  findViewById(R.id.arabic);
+        physics = findViewById(R.id.physics);
+        math =  findViewById(R.id.math);
+        chemistry =findViewById(R.id.chemistry);
+        programming =  findViewById(R.id.programming);
+        biology =  findViewById(R.id.biology);
 
         fAuth = FirebaseAuth.getInstance();
         sendButton=findViewById(R.id.send);
@@ -57,43 +56,41 @@ public class Improve extends AppCompatActivity {
         send();
     }
 
-
-
     protected void send() {
-        sendButton.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View v) {
+        sendButton.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
 
-                                              userId = fAuth.getCurrentUser().getUid();
-                                              DocumentReference documentReference = fStore.collection("users").document(userId);
-                                              List<String> improveList = new LinkedList<>();
+                        userId = fAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = fStore.collection("users").document(userId);
+                        List<String> improveList = new LinkedList<>();
 
-                                              if(english.isChecked())
-                                                  improveList.add("english");
-                                              if(french.isChecked())
-                                                  improveList.add("french");
-                                              if(hebrew.isChecked())
-                                                  improveList.add("hebrew");
-                                              if(spanish.isChecked())
-                                                  improveList.add("spanish");
-                                              if(arabic.isChecked())
-                                                  improveList.add("arabic");
-                                              if(physics.isChecked())
-                                                  improveList.add("physics");
-                                              if(math.isChecked())
-                                                  improveList.add("math");
-                                              if(chemistry.isChecked())
-                                                  improveList.add("chemistry");
-                                              if(programming.isChecked())
-                                                  improveList.add("programming");
-                                              if(biology.isChecked())
-                                                  improveList.add("biology");
-
-                                              documentReference.update("improve",improveList);
-                                              Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                                              startActivity(intent);
-                                          }
-                                      }
-        );
+                        if(english.isChecked())
+                            improveList.add("english");
+                        if(french.isChecked())
+                            improveList.add("french");
+                        if(hebrew.isChecked())
+                            improveList.add("hebrew");
+                        if(spanish.isChecked())
+                            improveList.add("spanish");
+                        if(arabic.isChecked())
+                            improveList.add("arabic");
+                        if(physics.isChecked())
+                            improveList.add("physics");
+                        if(math.isChecked())
+                            improveList.add("math");
+                        if(chemistry.isChecked())
+                            improveList.add("chemistry");
+                        if(programming.isChecked())
+                            improveList.add("programming");
+                        if(biology.isChecked())
+                            improveList.add("biology");
+                        documentReference.update("improve",improveList);
+                        Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                        startActivity(intent);
+                    }
+                });
     }
 }
