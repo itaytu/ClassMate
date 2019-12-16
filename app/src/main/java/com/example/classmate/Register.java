@@ -39,7 +39,7 @@ public class Register extends AppCompatActivity {
     private RadioButton userRadioButton;
     private TextView mLoginButton;
     private  String userId;
-    private boolean eflag, pflag;
+    private boolean eFlag, pFlag, nFlag;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private ProgressBar progressBar;
@@ -84,12 +84,12 @@ public class Register extends AppCompatActivity {
                     mEmail.setError("Invalid Email");
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
                     ViewCompat.setBackgroundTintList(mEmail, colorStateList);
-                    eflag = false;
+                    eFlag = false;
                 }
                 else {
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFF1C1CF0);
                     ViewCompat.setBackgroundTintList(mEmail, colorStateList);
-                    eflag = true;
+                    eFlag = true;
                 }
             }
         });
@@ -108,12 +108,37 @@ public class Register extends AppCompatActivity {
                     mPassword.setError("Please enter a password at least 8 characters long");
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
                     ViewCompat.setBackgroundTintList(mPassword, colorStateList);
-                    pflag = false;
+                    pFlag = false;
                 }
                 else {
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFF1C1CF0);
                     ViewCompat.setBackgroundTintList(mPassword, colorStateList);
-                    pflag = true;
+                    pFlag = true;
+                }
+            }
+        });
+
+
+        //Phone Number
+        mPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!isValidPhone(s)){
+                    mPhone.setError("Please enter a password at least 8 characters long");
+                    ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
+                    ViewCompat.setBackgroundTintList(mPhone, colorStateList);
+                    nFlag = false;
+                }
+                else {
+                    ColorStateList colorStateList = ColorStateList.valueOf(0xFF1C1CF0);
+                    ViewCompat.setBackgroundTintList(mPhone, colorStateList);
+                    nFlag = true;
                 }
             }
         });
@@ -137,11 +162,9 @@ public class Register extends AppCompatActivity {
                 else {
                     isStudent = true;
                 }
-                if(pflag && eflag){
+                if(pFlag && eFlag && nFlag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
                     progressBar.setVisibility(View.VISIBLE);
-//                    final int finalIsTeacher = isTeacher ? 1 : 0;
-//                    final int finalIsStudent = isStudent ? 1 : 0;
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -208,7 +231,16 @@ public class Register extends AppCompatActivity {
         return true;
     }
 
-    public void backTOlogin(View v){
+
+    private final static boolean isValidPhone(CharSequence target) {
+        if(target == null || target.length() != 9)
+            return false;
+
+        return true;
+    }
+
+
+    public void backTologin(View v){
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }

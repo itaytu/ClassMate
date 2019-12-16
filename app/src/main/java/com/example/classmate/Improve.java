@@ -36,7 +36,7 @@ public class Improve extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_skills);
+        setContentView(R.layout.activity_improve);
 
         english = findViewById(R.id.english);
         french =  findViewById(R.id.french);
