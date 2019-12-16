@@ -65,7 +65,6 @@ public class Register extends AppCompatActivity {
         fStore=FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
 
-        progressBar.setVisibility(View.INVISIBLE);
         InitListeners();
         register();
     }
@@ -139,7 +138,7 @@ public class Register extends AppCompatActivity {
                 }
                 if(pflag && eflag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
-                    progressBar.setVisibility(View.VISIBLE);
+//                    progressBar.setVisibility(View.VISIBLE);
 //                    final int finalIsTeacher = isTeacher ? 1 : 0;
 //                    final int finalIsStudent = isStudent ? 1 : 0;
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
