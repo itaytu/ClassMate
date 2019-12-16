@@ -233,7 +233,7 @@ public class Register extends AppCompatActivity {
 
 
     private final static boolean isValidPhone(CharSequence target) {
-        if(target == null || target.length() != 9)
+        if(target == null || target.length() != 10)
             return false;
 
         return true;
