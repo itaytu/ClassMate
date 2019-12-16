@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Teacher"></activity>
+        <activity android:name=".Algorithm"></activity>
+        <activity android:name=".Teacher" />
         <activity android:name=".Improve" />
         <activity android:name=".Skills" />
         <activity android:name=".Login">

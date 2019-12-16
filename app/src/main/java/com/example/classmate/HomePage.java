@@ -36,7 +36,8 @@ public class HomePage extends AppCompatActivity {
     private List<String> improvesList = new ArrayList<>();
     private String stringImproves="";
     private String stringSkills="";
-    private Button button;
+    private Button logout , findMatch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +49,11 @@ public class HomePage extends AppCompatActivity {
         improves= findViewById(R.id.improves);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        button= findViewById(R.id.logout_button);
-        useId = fAuth.getCurrentUser().getUid();
+        logout= findViewById(R.id.logout_button);
 
+        findMatch = findViewById(R.id.findMatch);
+
+        useId = fAuth.getCurrentUser().getUid();
         DocumentReference documentReference = fStore.collection("users").document(useId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
@@ -79,7 +82,7 @@ public class HomePage extends AppCompatActivity {
             }
 
         });
-        button.setOnClickListener(new View.OnClickListener() {
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fAuth.signOut();
@@ -87,11 +90,17 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        findMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Algorithm.class);
+                startActivity(intent);
+            }
+        });
 
     }
     @Override
     public void onBackPressed() {
-
         fAuth.signOut();
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
