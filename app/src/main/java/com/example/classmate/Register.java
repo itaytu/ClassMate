@@ -60,6 +60,7 @@ public class Register extends AppCompatActivity {
         mRegisterButton = findViewById(R.id.register_button);
         mLoginButton = findViewById(R.id.go_to_login_button);
         userRadioGroup = findViewById(R.id.userType_radioGroup);
+        userRadioButton = findViewById(R.id.isStudent_radioButton);
 
         fAuth = FirebaseAuth.getInstance();
         fStore=FirebaseFirestore.getInstance();
@@ -120,7 +121,7 @@ public class Register extends AppCompatActivity {
 
 
     protected void register() {
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +139,7 @@ public class Register extends AppCompatActivity {
                 }
                 if(pflag && eflag){
                     Log.d("REGISTER","IN BOOLEAN TRUE");
-//                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
 //                    final int finalIsTeacher = isTeacher ? 1 : 0;
 //                    final int finalIsStudent = isStudent ? 1 : 0;
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -214,6 +215,6 @@ public class Register extends AppCompatActivity {
     public void checkButton(View view) {
         int radioID = userRadioGroup.getCheckedRadioButtonId();
         userRadioButton = findViewById(radioID);
-
     }
+
 }

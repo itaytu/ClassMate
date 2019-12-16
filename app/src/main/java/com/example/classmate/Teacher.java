@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Teacher extends AppCompatActivity {
     private FirebaseFirestore firestore;
@@ -37,14 +38,14 @@ public class Teacher extends AppCompatActivity {
         @Override
         public void onComplete(@NonNull Task<QuerySnapshot> task) {
             ArrayList<Student> studentArrayList=new ArrayList<>();
-            String fullName ;
+            String fullName;
             String email;
             String phone;
-            List<String> skillsList=new ArrayList<>();
-            List<String> improveList=new ArrayList<>();
+            List<String> skillsList;
+            List<String> improveList;
             if (task.isSuccessful()){
                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                    if(documentSnapshot.getBoolean("isStudent").booleanValue()) {
+                    if(documentSnapshot.getBoolean("isStudent")) {
                         String skills="";
                         String improve="";
                         fullName = documentSnapshot.getString("Full-Name");
@@ -52,23 +53,25 @@ public class Teacher extends AppCompatActivity {
                         phone = documentSnapshot.getString("Phone");
                         skillsList = (List<String>) documentSnapshot.get("skills");
                         improveList = (List<String>) documentSnapshot.get("improve");
-                        for(String s :skillsList){
-                            if (skills.isEmpty()){
-                                skills = skills+s;
-                            }else
-                                skills = skills+ " ," +s ;
+                        if(skillsList != null) {
+                            for (String s : skillsList) {
+                                if (skills.isEmpty()) {
+                                    skills = skills + s;
+                                } else
+                                    skills = skills + " ," + s;
 
+                            }
                         }
-                        for (String s:improveList){
-                            if (improve.isEmpty()){
-                                improve = improve+s;
-                            }else
-                                improve = improve+ " ," +s ;
+                        if(improveList != null) {
+                            for (String s : improveList) {
+                                if (improve.isEmpty()) {
+                                    improve = improve + s;
+                                } else
+                                    improve = improve + " ," + s;
+                            }
                         }
-
                         Student student = new Student(fullName, email, phone,skills,improve);
                         studentArrayList.add(student);
-//                            Student student = new Student(fullName, email, phone);
                     }
                 }
                 listView = findViewById(R.id.listView);

@@ -87,9 +87,16 @@ public class Improve extends AppCompatActivity {
                             improveList.add("programming");
                         if(biology.isChecked())
                             improveList.add("biology");
-                        documentReference.update("improve",improveList);
-                        Intent intent = new Intent(getApplicationContext(), HomePage.class);
-                        startActivity(intent);
+
+                        if(!improveList.isEmpty()) {
+                            documentReference.update("improve", improveList);
+                            Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            sendButton.setError("Please choose at least one improvement");
+                        }
+
                     }
                 });
     }

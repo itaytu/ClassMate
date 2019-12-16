@@ -62,19 +62,23 @@ public class Algorithm extends AppCompatActivity {
                     String email;
                     String phone;
                     ArrayList<Student> students = new ArrayList<>();
-                    for (QueryDocumentSnapshot documentSnapshot:task.getResult()){
-                        if (!documentSnapshot.getId().equals(userId)){
-                            if(documentSnapshot.getBoolean("isStudent").booleanValue()){
-                                otherSkills = (List<String>) documentSnapshot.get("skills");
-                                for (String s : improveList){
-                                    if (otherSkills.contains(s)){
-                                        improveToLearn=s;
-                                        fullName = documentSnapshot.getString("Full-Name");
-                                        email = documentSnapshot.getString("Email");
-                                        phone = documentSnapshot.getString("Phone");
-                                        Student student = new Student(fullName,email,phone,improveToLearn);
-                                        students.add(student);
-                                        break;
+                    if(improveList != null) {
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            if (!documentSnapshot.getId().equals(userId)) {
+                                if (documentSnapshot.getBoolean("isStudent")) {
+                                    otherSkills = (List<String>) documentSnapshot.get("skills");
+                                    if(otherSkills != null) {
+                                        for (String s : improveList) {
+                                            if (otherSkills.contains(s)) {
+                                                improveToLearn = s;
+                                                fullName = documentSnapshot.getString("Full-Name");
+                                                email = documentSnapshot.getString("Email");
+                                                phone = documentSnapshot.getString("Phone");
+                                                Student student = new Student(fullName, email, phone, improveToLearn);
+                                                students.add(student);
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -60,39 +60,48 @@ public class Skills extends AppCompatActivity {
 
 
     protected void send() {
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        sendButton.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v) {
 
-                userId = fAuth.getCurrentUser().getUid();
-                DocumentReference documentReference = fStore.collection("users").document(userId);
-                List<String> skillsList = new LinkedList<>();
+                        userId = fAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = fStore.collection("users").document(userId);
+                        List<String> skillsList = new LinkedList<>();
 
-                if(english.isChecked())
-                    skillsList.add("english");
-                if(french.isChecked())
-                    skillsList.add("french");
-                if(hebrew.isChecked())
-                    skillsList.add("hebrew");
-                if(spanish.isChecked())
-                    skillsList.add("spanish");
-                if(arabic.isChecked())
-                    skillsList.add("arabic");
-                if(physics.isChecked())
-                    skillsList.add("physics");
-                if(math.isChecked())
-                    skillsList.add("math");
-                if(chemistry.isChecked())
-                    skillsList.add("chemistry");
-                if(programming.isChecked())
-                    skillsList.add("programming");
-                if(biology.isChecked())
-                    skillsList.add("biology");
-                documentReference.update("skills",skillsList);
-                Intent intent = new Intent(getApplicationContext(), Improve.class);
-                startActivity(intent);
-            }
-        }
+                        if(english.isChecked())
+                            skillsList.add("english");
+                        if(french.isChecked())
+                            skillsList.add("french");
+                        if(hebrew.isChecked())
+                            skillsList.add("hebrew");
+                        if(spanish.isChecked())
+                            skillsList.add("spanish");
+                        if(arabic.isChecked())
+                            skillsList.add("arabic");
+                        if(physics.isChecked())
+                            skillsList.add("physics");
+                        if(math.isChecked())
+                            skillsList.add("math");
+                        if(chemistry.isChecked())
+                            skillsList.add("chemistry");
+                        if(programming.isChecked())
+                            skillsList.add("programming");
+                        if(biology.isChecked())
+                            skillsList.add("biology");
+
+                        if(!skillsList.isEmpty()) {
+                            documentReference.update("skills", skillsList);
+                            Intent intent = new Intent(getApplicationContext(), Improve.class);
+                            startActivity(intent);
+                        }
+
+                        else{
+                            sendButton.setError("Please choose at least one skill");
+                        }
+                    }
+                }
         );
     }
 }
