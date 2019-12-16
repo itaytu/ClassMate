@@ -130,7 +130,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(!isValidPhone(s)){
-                    mPhone.setError("Please enter a password at least 8 characters long");
+                    mPhone.setError("Please enter a valid phone number");
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
                     ViewCompat.setBackgroundTintList(mPhone, colorStateList);
                     nFlag = false;
