@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.classmate.R;
-import com.example.classmate.Teacher.Class;
+import com.example.classmate.Teacher.teacher_homePage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,7 +199,8 @@ public class Register extends AppCompatActivity {
                                      intent = new Intent(getApplicationContext(), Skills.class);
                                 }else
                                 {
-                                    intent = new Intent(getApplicationContext(), Class.class);
+                                    intent = new Intent(getApplicationContext(), teacher_homePage.class);
+                                    documentReference.update("classes", new ArrayList<String>());
                                 }
                                 startActivity(intent);
 

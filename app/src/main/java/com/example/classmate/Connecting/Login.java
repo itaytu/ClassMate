@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.classmate.Student.HomePage;
 import com.example.classmate.R;
-import com.example.classmate.Teacher.Class;
+import com.example.classmate.Teacher.teacher_homePage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -152,7 +152,7 @@ public class Login extends AppCompatActivity {
                                          intent = new Intent(getApplicationContext(), HomePage.class);
 
                                     }else{
-                                         intent = new Intent(getApplicationContext(), Class.class);
+                                         intent = new Intent(getApplicationContext(), teacher_homePage.class);
                                     }
                                     startActivity(intent);
                                 }
