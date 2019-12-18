@@ -16,11 +16,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.classmate.Models.Student;
+import com.example.classmate.Models.Teacher;
+import com.example.classmate.Models.User;
 import com.example.classmate.R;
-import com.example.classmate.Teacher.teacher_homePage;
+import com.example.classmate.Teacher_Activities.Teacher_HomePage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,24 +32,20 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 public class Register extends AppCompatActivity {
 
     private EditText mFullName, mEmail, mPassword, mPhone;
     private Button mRegisterButton;
     private RadioGroup userRadioGroup;
     private RadioButton userRadioButton;
-    private TextView mLoginButton;
-    private  String userId;
-    private boolean eFlag, pFlag, nFlag;
+
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private ProgressBar progressBar;
+
     boolean isTeacher = false;
-    boolean isStudent = false;
+    private String uuid;
+    private boolean eFlag, pFlag, nFlag;
 
 
 
@@ -61,19 +59,19 @@ public class Register extends AppCompatActivity {
         mPassword = findViewById(R.id.password_register_textView);
         mPhone = findViewById(R.id.phone_textView);
         mRegisterButton = findViewById(R.id.register_button);
-        mLoginButton = findViewById(R.id.go_to_login_button);
         userRadioGroup = findViewById(R.id.userType_radioGroup);
         userRadioButton = findViewById(R.id.isStudent_radioButton);
+        progressBar = findViewById(R.id.progressBar);
 
         fAuth = FirebaseAuth.getInstance();
         fStore=FirebaseFirestore.getInstance();
-        progressBar = findViewById(R.id.progressBar);
 
         InitListeners();
         register();
     }
 
     protected void InitListeners() {
+        //Email
         mEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -153,20 +151,18 @@ public class Register extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = mEmail.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
                 final String fullName = mFullName.getText().toString();
+                final String email = mEmail.getText().toString();
+                final String password = mPassword.getText().toString();
                 final String phone = mPhone.getText().toString();
-
 
                 if(userRadioButton.getText().equals("Teacher")) {
                     isTeacher = true;
                 }
                 else {
-                    isStudent = true;
+                    isTeacher = false;
                 }
                 if(pFlag && eFlag && nFlag){
-                    Log.d("REGISTER","IN BOOLEAN TRUE");
                     progressBar.setVisibility(View.VISIBLE);
                     fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -174,39 +170,21 @@ public class Register extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 Log.d("REGISTER", "Task Completed");
                                 Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
-                                userId=fAuth.getCurrentUser().getUid();
-                                DocumentReference documentReference = fStore.collection("users").document(userId);
-                                Map<String, Object> user = new HashMap<>();
-                                user.put("Full-Name", fullName);
-                                user.put("Email", email);
-                                user.put("Phone", phone);
-                                user.put("isTeacher", isTeacher);
-                                user.put("isStudent", isStudent);
-                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("REGISTER", "User profile is created" + userId);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d("REGISTER", "on failure" + e.toString());
 
-                                    }
-                                });
+                                uuid =fAuth.getCurrentUser().getUid();
+                                populateCollections(fullName, email, phone, isTeacher);
+
                                 Intent intent;
-                                if (isStudent) {
-                                     intent = new Intent(getApplicationContext(), Skills.class);
-                                }else
-                                {
-                                    intent = new Intent(getApplicationContext(), teacher_homePage.class);
-                                    documentReference.update("classes", new ArrayList<String>());
+                                if (!isTeacher) {
+                                    intent = new Intent(getApplicationContext(), Skills.class);
+                                }
+                                else {
+                                    intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
                                 }
                                 startActivity(intent);
-
                             }
                             else {
-                                Log.d("REGISTER", "onComplete: Failed=" + task.getException().getMessage());
+                                Log.d("REGISTER", "onComplete: Failed =" + task.getException().getMessage());
                             }
                         }
                     });
@@ -217,6 +195,72 @@ public class Register extends AppCompatActivity {
             }
         });
     }
+
+
+    private void populateCollections(String fullName, String email, String phone, Boolean isTeacher) {
+        //Populate collection with all users
+        DocumentReference documentReferenceUsers = fStore.collection("users").document(uuid);
+        /*Map<String, Object> user = new HashMap<>();
+        user.put("Full-Name", fullName);
+        user.put("Email", email);
+        user.put("Phone", phone);
+        user.put("isTeacher", isTeacher);
+        user.put("isStudent", isStudent);*/
+
+        User user = new User(fullName, email, phone, isTeacher);
+        documentReferenceUsers.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("REGISTER_USERS", "User profile created successfully " + uuid);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("REGISTER_USERS", "User profile creation failed: " + e.toString());
+            }
+        });
+
+        //Populate collection of specific type of User Teacher_Create_Class/Student_v1
+        if(isTeacher) {
+            DocumentReference documentReferenceTeachers = fStore.collection("teachers").document(uuid);
+            Teacher teacher = new Teacher(fullName, email, phone);
+            documentReferenceTeachers.set(teacher).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("REGISTER_TEACHERS", "teacher profile created successfully " + uuid);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("REGISTER_TEACHERS", "teacher profile creation failed: " + e.toString());
+                }
+            });
+        }
+
+        else {
+            DocumentReference documentReferenceStudents = fStore.collection("students").document(uuid);
+            /*Map<String, Object> student = new HashMap<>();
+            student.put("full_name", fullName);
+            student.put("email", email);
+            student.put("phone", phone);*/
+            Student student = new Student(fullName, email, phone);
+            documentReferenceStudents.set(student).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("REGISTER_STUDENTS", "student profile created successfully " + uuid);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("REGISTER_STUDENTS", "student profile creation failed: " + e.toString());
+                }
+            });
+        }
+
+    }
+
+
+
 
 
 
@@ -243,11 +287,11 @@ public class Register extends AppCompatActivity {
         return true;
     }
 
-
     public void backTologin(View v){
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }
+
     public void checkButton(View view) {
         int radioID = userRadioGroup.getCheckedRadioButtonId();
         userRadioButton = findViewById(radioID);
