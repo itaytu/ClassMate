@@ -13,19 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Algorithm"></activity>
-        <activity android:name=".Teacher" />
-        <activity android:name=".Improve" />
-        <activity android:name=".Skills" />
-        <activity android:name=".Login">
+        <activity android:name=".Teacher.Class"></activity>
+        <activity android:name=".Student.Algorithm" />
+        <activity android:name=".Teacher.Teacher" />
+        <activity android:name=".Connecting.Improve" />
+        <activity android:name=".Connecting.Skills" />
+        <activity android:name=".Connecting.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HomePage" />
-        <activity android:name=".Register" />
+        <activity android:name=".Student.HomePage" />
+        <activity android:name=".Connecting.Register" />
     </application>
 
 </manifest>

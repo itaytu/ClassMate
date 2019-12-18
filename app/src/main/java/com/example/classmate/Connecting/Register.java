@@ -1,4 +1,4 @@
-package com.example.classmate;
+package com.example.classmate.Connecting;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.classmate.R;
+import com.example.classmate.Teacher.Class;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -196,7 +198,7 @@ public class Register extends AppCompatActivity {
                                      intent = new Intent(getApplicationContext(), Skills.class);
                                 }else
                                 {
-                                    intent = new Intent(getApplicationContext(),Teacher.class);
+                                    intent = new Intent(getApplicationContext(), Class.class);
                                 }
                                 startActivity(intent);
 

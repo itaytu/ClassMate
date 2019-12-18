@@ -1,4 +1,4 @@
-package com.example.classmate;
+package com.example.classmate.Teacher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.classmate.Connecting.Login;
+import com.example.classmate.R;
+import com.example.classmate.Student.Student;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Teacher extends AppCompatActivity {
     private FirebaseFirestore firestore;
@@ -77,11 +79,13 @@ public class Teacher extends AppCompatActivity {
                 listView = findViewById(R.id.listView);
                 Teacher_adapter teacher_adapter = new Teacher_adapter(Teacher.this,studentArrayList);
                 listView.setAdapter(teacher_adapter);
+                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Toast.makeText(Teacher.this,"position : "+ position,Toast.LENGTH_SHORT).show();
+                        Log.d("Teacher","on click item");
+                        Toast.makeText(Teacher.this,"position : "+ position ,Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{

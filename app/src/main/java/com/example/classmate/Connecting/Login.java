@@ -1,4 +1,4 @@
-package com.example.classmate;
+package com.example.classmate.Connecting;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.classmate.Student.HomePage;
+import com.example.classmate.R;
+import com.example.classmate.Teacher.Class;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -132,6 +135,7 @@ public class Login extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "into the func");
                         if (task.isSuccessful()) {
                             eflag=pflag=true;
                             // Sign in success, update UI with the signed-in user's information
@@ -143,12 +147,12 @@ public class Login extends AppCompatActivity {
                                     teacherOrStudent =documentSnapshot.getBoolean("isStudent");
                                     Log.d("Login","is student : "+ teacherOrStudent.booleanValue());
                                     Intent intent;
-                                    if (teacherOrStudent.booleanValue()){
+                                    if (teacherOrStudent){
                                         Log.d(TAG, "signInWithEmail:success");
                                          intent = new Intent(getApplicationContext(), HomePage.class);
 
                                     }else{
-                                         intent = new Intent(getApplicationContext(), Teacher.class);
+                                         intent = new Intent(getApplicationContext(), Class.class);
                                     }
                                     startActivity(intent);
                                 }
@@ -157,7 +161,7 @@ public class Login extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(Login.this, "Authentication failed.",
+                            Toast.makeText(Login.this, "Check your email and password",
                                     Toast.LENGTH_SHORT).show();
                         }
 

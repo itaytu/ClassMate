@@ -1,4 +1,4 @@
-package com.example.classmate;
+package com.example.classmate.Connecting;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.example.classmate.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Improve extends AppCompatActivity {
+public class Skills extends AppCompatActivity {
 
     private Button sendButton;
     private FirebaseFirestore fStore;
@@ -33,21 +34,22 @@ public class Improve extends AppCompatActivity {
     private CheckBox programming;
     private CheckBox biology;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_improve);
+        setContentView(R.layout.activity_skills);
 
-        english = findViewById(R.id.english);
-        french =  findViewById(R.id.french);
-        hebrew =  findViewById(R.id.hebrew);
-        spanish = findViewById(R.id.spanish);
-        arabic =  findViewById(R.id.arabic);
-        physics = findViewById(R.id.physics);
-        math =  findViewById(R.id.math);
-        chemistry =findViewById(R.id.chemistry);
-        programming =  findViewById(R.id.programming);
-        biology =  findViewById(R.id.biology);
+        english = (CheckBox) findViewById(R.id.english);
+        french = (CheckBox) findViewById(R.id.french);
+        hebrew = (CheckBox) findViewById(R.id.hebrew);
+        spanish = (CheckBox) findViewById(R.id.spanish);
+        arabic = (CheckBox) findViewById(R.id.arabic);
+        physics = (CheckBox) findViewById(R.id.physics);
+        math = (CheckBox) findViewById(R.id.math);
+        chemistry = (CheckBox) findViewById(R.id.chemistry);
+        programming = (CheckBox) findViewById(R.id.programming);
+        biology = (CheckBox) findViewById(R.id.biology);
 
         fAuth = FirebaseAuth.getInstance();
         sendButton=findViewById(R.id.send);
@@ -55,6 +57,8 @@ public class Improve extends AppCompatActivity {
 
         send();
     }
+
+
 
     protected void send() {
         sendButton.setOnClickListener(
@@ -65,39 +69,40 @@ public class Improve extends AppCompatActivity {
 
                         userId = fAuth.getCurrentUser().getUid();
                         DocumentReference documentReference = fStore.collection("users").document(userId);
-                        List<String> improveList = new LinkedList<>();
+                        List<String> skillsList = new LinkedList<>();
 
                         if(english.isChecked())
-                            improveList.add("english");
+                            skillsList.add("english");
                         if(french.isChecked())
-                            improveList.add("french");
+                            skillsList.add("french");
                         if(hebrew.isChecked())
-                            improveList.add("hebrew");
+                            skillsList.add("hebrew");
                         if(spanish.isChecked())
-                            improveList.add("spanish");
+                            skillsList.add("spanish");
                         if(arabic.isChecked())
-                            improveList.add("arabic");
+                            skillsList.add("arabic");
                         if(physics.isChecked())
-                            improveList.add("physics");
+                            skillsList.add("physics");
                         if(math.isChecked())
-                            improveList.add("math");
+                            skillsList.add("math");
                         if(chemistry.isChecked())
-                            improveList.add("chemistry");
+                            skillsList.add("chemistry");
                         if(programming.isChecked())
-                            improveList.add("programming");
+                            skillsList.add("programming");
                         if(biology.isChecked())
-                            improveList.add("biology");
+                            skillsList.add("biology");
 
-                        if(!improveList.isEmpty()) {
-                            documentReference.update("improve", improveList);
-                            Intent intent = new Intent(getApplicationContext(), HomePage.class);
+                        if(!skillsList.isEmpty()) {
+                            documentReference.update("skills", skillsList);
+                            Intent intent = new Intent(getApplicationContext(), Improve.class);
                             startActivity(intent);
                         }
-                        else {
-                            sendButton.setError("Please choose at least one improvement");
-                        }
 
+                        else{
+                            sendButton.setError("Please choose at least one skill");
+                        }
                     }
-                });
+                }
+        );
     }
 }

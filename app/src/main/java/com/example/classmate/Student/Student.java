@@ -1,4 +1,4 @@
-package com.example.classmate;
+package com.example.classmate.Student;
 
 public class Student {
     private String fullName;
