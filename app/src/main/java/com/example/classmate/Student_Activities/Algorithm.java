@@ -1,4 +1,4 @@
-package com.example.classmate.Student;
+package com.example.classmate.Student_Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.example.classmate.Models.Student;
 import com.example.classmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -16,13 +17,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Algorithm extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
+
     private String userId;
+    private List<String> weaknesses = new ArrayList<>();
+    private List<String> otherSkills = new ArrayList<>();
+
     private ListView listView;
-    private List<String> improveList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,49 +42,45 @@ public class Algorithm extends AppCompatActivity {
 //        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
 //            @Override
 //            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                improveList= (List<String>) documentSnapshot.get("improve");
+//                weaknesses= (List<String>) documentSnapshot.get("improve");
 //            }
 //        });
-        firestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firestore.collection("students").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                List<String> otherSkills = new ArrayList<>();
-                String improveToLearn="";
                 if (task.isSuccessful()){
-                    for(QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                    for(QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
                         if (documentSnapshot.getId().equals(userId)){
-                            improveList= (List<String>) documentSnapshot.get("improve");
+                            weaknesses = (List<String>) documentSnapshot.get("weaknesses");
                             break;
                         }
                     }
-                    String fullName ;
-                    String email;
-                    String phone;
+
                     ArrayList<Student> students = new ArrayList<>();
-                    if(improveList != null) {
+                    if(weaknesses != null) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                             if (!documentSnapshot.getId().equals(userId)) {
-                                if (documentSnapshot.getBoolean("isStudent")) {
-                                    otherSkills = (List<String>) documentSnapshot.get("skills");
-                                    if(otherSkills != null) {
-                                        for (String s : improveList) {
-                                            if (otherSkills.contains(s)) {
-                                                improveToLearn = s;
-                                                fullName = documentSnapshot.getString("Full-Name");
-                                                email = documentSnapshot.getString("Email");
-                                                phone = documentSnapshot.getString("Phone");
-                                                Student student = new Student(fullName, email, phone, improveToLearn);
-                                                students.add(student);
-                                                break;
-                                            }
+                                ArrayList<String> skillsToLearn = new ArrayList<>();
+                                otherSkills = (List<String>) documentSnapshot.get("skills");
+                                if(otherSkills != null) {
+                                    for (String weakness : weaknesses) {
+                                        if (otherSkills.contains(weakness)) {
+                                            skillsToLearn.add(weakness);
+                                            break;
                                         }
+                                    }
+                                    if(!skillsToLearn.isEmpty()) {
+                                        Student otherStudent = new Student((Student) documentSnapshot.getData());
+                                        for (String skill : skillsToLearn)
+                                            otherStudent.addSkills(skill);
+                                        students.add(otherStudent);
                                     }
                                 }
                             }
                         }
                     }
                     listView= findViewById(R.id.listView);
-                    Algorithm_adapter algorithm_adapter = new Algorithm_adapter(Algorithm.this,students);
+                    Algorithm_adapter algorithm_adapter = new Algorithm_adapter(Algorithm.this, students);
                     listView.setAdapter(algorithm_adapter);
                 }
             }

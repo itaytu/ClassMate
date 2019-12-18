@@ -1,17 +1,19 @@
-package com.example.classmate.Classroom;
-
-import com.example.classmate.Student.Student;
+package com.example.classmate.Models;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class classroom {
+public class Classroom {
 
     private String uuid;
     private String teacher_uuid;
+    private String class_name;
+
     private List<Student> studentsList;
 
-    public classroom() {
+    public Classroom(String class_name) {
+        this.class_name = class_name;
+
         studentsList = new ArrayList<>();
     }
 
@@ -36,7 +38,15 @@ public class classroom {
         return studentsList;
     }
 
-    public void setStudentsList(List<Student> studentsList) {
-        this.studentsList = studentsList;
+    public void addStudents(Student student) {
+        this.studentsList.add(student);
+    }
+
+    public String getClass_name() {
+        return class_name;
+    }
+
+    public void setClass_name(String class_name) {
+        this.class_name = class_name;
     }
 }

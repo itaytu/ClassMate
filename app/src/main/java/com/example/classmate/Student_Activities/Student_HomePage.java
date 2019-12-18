@@ -1,4 +1,4 @@
-package com.example.classmate.Student;
+package com.example.classmate.Student_Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class HomePage extends AppCompatActivity {
+public class Student_HomePage extends AppCompatActivity {
 
     private TextView fullName , email ,phone,skills,improves;
     private FirebaseAuth fAuth;

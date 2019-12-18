@@ -94,7 +94,7 @@ public class Skills extends AppCompatActivity {
 
                         if(!skillsList.isEmpty()) {
                             documentReference.update("skills", skillsList);
-                            Intent intent = new Intent(getApplicationContext(), Improve.class);
+                            Intent intent = new Intent(getApplicationContext(), Weaknesses.class);
                             startActivity(intent);
                         }
 
