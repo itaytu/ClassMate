@@ -2,11 +2,14 @@ package com.example.classmate.Teacher;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,18 +25,22 @@ public class Teacher_adapter extends BaseAdapter {
 
     private final Context context;
     private ArrayList<Student> students ;
+
     public Teacher_adapter(Context context , ArrayList<Student> list){
         this.context=context;
         this.students=list;
+    }
 
-    }
     static class ViewHolder{
-        TextView fullName ;
-        TextView email ;
-        TextView phone ;
-        TextView skills ;
-        TextView improves ;
+        TextView fullName;
+        TextView email;
+        TextView phone;
+        TextView skills;
+        TextView improves;
+        LinearLayout linearLayout;
     }
+
+
     @Override
     public int getCount() {
         return students.size();
@@ -61,6 +68,7 @@ public class Teacher_adapter extends BaseAdapter {
             viewHolder.phone = rowView.findViewById(R.id.phone);
             viewHolder.skills = rowView.findViewById(R.id.skills);
             viewHolder.improves = rowView.findViewById(R.id.improve);
+            viewHolder.linearLayout = rowView.findViewById(R.id.relativeLayout);
 
             rowView.setTag(viewHolder);
         }
@@ -71,32 +79,21 @@ public class Teacher_adapter extends BaseAdapter {
         holder.improves.setText(students.get(position).getImprove());
         holder.skills.setText(students.get(position).getSkills());
 
+        if(students.get(position).isClicked())
+            holder.linearLayout.setBackgroundColor(Color.GRAY);
+        else
+            holder.linearLayout.setBackgroundColor(Color.WHITE);
+
         return rowView;
     }
 
-//    public Teacher_adapter(Context context, List<Student> objects) {
-//        super(context, 0, objects);
-//    }
-//
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        if(convertView == null){
-//            convertView = ((Activity)getContext()).getLayoutInflater().inflate(R.layout.listview_row,parent,false);
-//        }
-//
-//        TextView fullName = convertView.findViewById(R.id.full_name);
-//        TextView email = convertView.findViewById(R.id.email);
-//        TextView phone = convertView.findViewById(R.id.phone);
-//        TextView skills = convertView.findViewById(R.id.skills);
-//        TextView improves = convertView.findViewById(R.id.improve);
-//        Student student = getItem(position);
-//
-//        fullName.setText(student.getFullName());
-//        email.setText(student.getEmail());
-//        phone.setText(student.getPhone());
-//        skills.setText(student.getSkills());
-//        improves.setText(student.getImprove());
-//
-//        return convertView;
-//    }
+
+    public void setSelectedIndex(int position) {
+        if(students.get(position).isClicked())
+            students.get(position).setClicked(false);
+        else
+            students.get(position).setClicked(true);
+    }
+
+
 }
