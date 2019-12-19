@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.classmate.Student_Activities.Student_HomePage;
@@ -36,10 +39,9 @@ import javax.annotation.Nullable;
 public class Login extends AppCompatActivity {
 
     private Button loginButton;
-    private Button register;
-    private EditText emailEditText;
-    private EditText passwordEditText;
-    private ImageView imageView;
+//    private Button register;
+    private TextView register;
+    private EditText emailEditText , passwordEditText ;
     private boolean pflag = false, eflag = false;
     private FirebaseAuth mAuth;
     private static final String TAG = "Login";
@@ -54,10 +56,9 @@ public class Login extends AppCompatActivity {
 
 
         loginButton = findViewById(R.id.loginButton);
-        register=findViewById(R.id.register);
+        register=findViewById(R.id.register_textView);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-        imageView= findViewById(R.id.imageView);
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -180,6 +181,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(eflag&&pflag) {
+                    Vibrator vibrator = (Vibrator) Login.this.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(5000);
                     checkEMAILpassword();
                 }else{
                     Toast.makeText(Login.this, "Invalid email or password.",

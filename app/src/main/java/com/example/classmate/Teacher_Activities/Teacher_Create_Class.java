@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -39,7 +40,6 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-//TODO: create teacher object
 //TODO: move logic from adapter to different class
 
 public class Teacher_Create_Class extends AppCompatActivity {
@@ -52,8 +52,8 @@ public class Teacher_Create_Class extends AppCompatActivity {
     private TextView classroom_textView;
     private String uuid;
     private List<String> classes;
-    private static boolean isClicked;
     private List<String> classFromDb;
+    private List<Pair<Student,String>> studentUuid;
     private Teacher_Adapter teacher_adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class Teacher_Create_Class extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         uuid = firebaseAuth.getUid();
-
+        studentUuid = new ArrayList<>();
         submit = findViewById(R.id.submit);
         classroom_textView = findViewById(R.id.classroom_textView);
 
@@ -70,7 +70,7 @@ public class Teacher_Create_Class extends AppCompatActivity {
         classStudents = new ArrayList<>();
         Log.d("Teacher Create class","reach here before");
         final DocumentReference documentReferenceTwo = firestore.collection("teachers").document(uuid);
-        documentReferenceTwo.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        documentReferenceTwo.addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 classFromDb = (List<String>) documentSnapshot.get("classes");
@@ -95,6 +95,8 @@ public class Teacher_Create_Class extends AppCompatActivity {
                         Student student = new Student(fullName,email,phone);
                         student.getSkills().addAll(skillsList);
                         student.getWeaknesses().addAll(improveList);
+                        Pair<Student,String> pair =new Pair<>(student,documentSnapshot.getId());
+                        studentUuid.add(pair);
                         classStudents.add(student);
                     }
 
@@ -125,14 +127,12 @@ public class Teacher_Create_Class extends AppCompatActivity {
 
         submit.setOnClickListener(new View.OnClickListener() {
 
-            //TODO: create random uid per Classroom via randomGenerator
             @Override
             public void onClick(View v) {
-                DocumentReference documentReference = firestore.collection("classes").document();
-                Classroom classroom = new Classroom(classroom_textView.getText().toString());
-                classroom.setUuid(documentReference.toString());
+                final DocumentReference documentReference = firestore.collection("classes").document();
+                final Classroom classroom = new Classroom(classroom_textView.getText().toString());
+                classroom.setUuid(documentReference.getId());
                 classroom.setTeacher_uuid(uuid);
-                classes.add(classroom.getClass_name());
                 for (Student student : classStudents) {
                     student.setClassroom(classroom.getUuid());
                     classroom.addStudents(student);
@@ -141,6 +141,9 @@ public class Teacher_Create_Class extends AppCompatActivity {
                 documentReference.set(classroom).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        documentReference.update("uuid",documentReference.getId());
+                        classroom.setUuid(documentReference.getId());
+                        classes.add(classroom.getUuid());
                         Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -150,23 +153,17 @@ public class Teacher_Create_Class extends AppCompatActivity {
                     }
                 });
 
-
-                /*Map<String, Student_v1> class_students = new HashMap<>();
-                for (Student student : classStudents) {
-                    class_students.put(student.getUuid(), student);
-                    documentReference.set(class_students).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(Teacher_Create_Class.this, "Teacher_HomePage created Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
-                        }
-                    });
-                }*/
-                //ToDO add connction between all studet to is class
+                for (int i = 0;i<studentUuid.size();i++){
+                    if (!classStudents.contains(studentUuid.get(i).first)){
+                        studentUuid.remove(i);
+                        i--;
+                    }
+                }
+                Log.d("TEACHER C ", studentUuid.size()+"");
+                for (Pair<Student,String> pair :studentUuid){
+                    DocumentReference reference =firestore.collection("students").document(pair.second);
+                    reference.update("classroom",classroom.getUuid());
+                }
                 classFromDb.addAll(classes);
                 documentReferenceTwo.update("classes", classFromDb);
                 Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);

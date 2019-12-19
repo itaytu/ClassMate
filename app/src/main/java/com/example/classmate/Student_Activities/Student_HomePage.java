@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -60,19 +61,8 @@ public class Student_HomePage extends AppCompatActivity {
                 email.append(documentSnapshot.getString("email"));
                 skillsList = (List<String>) documentSnapshot.get("skills");
                 improvesList = (List<String>) documentSnapshot.get("weaknesses");
-                for(String s :skillsList){
-                    if (stringSkills.isEmpty()){
-                        stringSkills = stringSkills+s;
-                    }else
-                    stringSkills = stringSkills+ " ," +s ;
-
-                }
-                for (String s:improvesList){
-                    if (stringImproves.isEmpty()){
-                        stringImproves = stringImproves+s;
-                    }else
-                    stringImproves = stringImproves+ " ," +s ;
-                }
+                String stringSkills = TextUtils.join(", ", skillsList);
+                String stringImproves = TextUtils.join(", ", improvesList);
                 skills.append(stringSkills);
                 improves.append(stringImproves);
             }

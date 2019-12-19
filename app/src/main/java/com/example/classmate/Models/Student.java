@@ -17,7 +17,7 @@ public class Student {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-
+        this.classroom="";
         skills = new ArrayList<>();
         weaknesses = new ArrayList<>();
     }

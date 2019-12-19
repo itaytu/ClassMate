@@ -31,8 +31,6 @@ public class Teacher_Adapter extends BaseAdapter {
         }
 
     }
-
-
     static class ViewHolder{
         TextView fullName;
         TextView email;
