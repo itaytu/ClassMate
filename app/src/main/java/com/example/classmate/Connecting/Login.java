@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.classmate.Student_Activities.Student_HomePage;
@@ -38,6 +39,7 @@ public class Login extends AppCompatActivity {
     private Button register;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private ImageView imageView;
     private boolean pflag = false, eflag = false;
     private FirebaseAuth mAuth;
     private static final String TAG = "Login";
@@ -55,7 +57,7 @@ public class Login extends AppCompatActivity {
         register=findViewById(R.id.register);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-
+        imageView= findViewById(R.id.imageView);
 
         // [START initialize_auth]
         // Initialize Firebase Auth

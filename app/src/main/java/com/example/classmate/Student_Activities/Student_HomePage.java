@@ -49,18 +49,17 @@ public class Student_HomePage extends AppCompatActivity {
         logout= findViewById(R.id.logout_button);
 
         findMatch = findViewById(R.id.findMatch);
-
         useId = fAuth.getCurrentUser().getUid();
-        DocumentReference documentReference = fStore.collection("users").document(useId);
+        DocumentReference documentReference = fStore.collection("students").document(useId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Log.d("PROFILE", "here");
-                phone.append(documentSnapshot.getString("Phone"));
-                fullName.append(documentSnapshot.getString("Full-Name"));
-                email.append(documentSnapshot.getString("Email"));
+                phone.append(documentSnapshot.getString("phone"));
+                fullName.append(documentSnapshot.getString("fullName"));
+                email.append(documentSnapshot.getString("email"));
                 skillsList = (List<String>) documentSnapshot.get("skills");
-                improvesList = (List<String>) documentSnapshot.get("improve");
+                improvesList = (List<String>) documentSnapshot.get("weaknesses");
                 for(String s :skillsList){
                     if (stringSkills.isEmpty()){
                         stringSkills = stringSkills+s;

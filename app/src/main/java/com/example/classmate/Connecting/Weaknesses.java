@@ -66,7 +66,7 @@ public class Weaknesses extends AppCompatActivity {
                     public void onClick(View v) {
 
                         userId = fAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = fStore.collection("users").document(userId);
+                        DocumentReference documentReference = fStore.collection("students").document(userId);
                         List<String> improveList = new LinkedList<>();
 
                         if(english.isChecked())
@@ -91,7 +91,7 @@ public class Weaknesses extends AppCompatActivity {
                             improveList.add("biology");
 
                         if(!improveList.isEmpty()) {
-                            documentReference.update("improve", improveList);
+                            documentReference.update("weaknesses", improveList);
                             Intent intent = new Intent(getApplicationContext(), Student_HomePage.class);
                             startActivity(intent);
                         }

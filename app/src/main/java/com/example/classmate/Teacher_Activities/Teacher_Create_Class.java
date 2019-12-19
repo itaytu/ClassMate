@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.classmate.Connecting.Login;
 import com.example.classmate.Models.Classroom;
 import com.example.classmate.Models.Student;
 import com.example.classmate.R;
@@ -23,13 +22,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 //TODO: create teacher object
 //TODO: move logic from adapter to different class
@@ -44,14 +52,13 @@ public class Teacher_Create_Class extends AppCompatActivity {
     private TextView classroom_textView;
     private String uuid;
     private List<String> classes;
-
     private static boolean isClicked;
-
+    private List<String> classFromDb;
+    private Teacher_Adapter teacher_adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher);
-
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         uuid = firebaseAuth.getUid();
@@ -61,31 +68,50 @@ public class Teacher_Create_Class extends AppCompatActivity {
 
         classes = new ArrayList<>();
         classStudents = new ArrayList<>();
-
+        Log.d("Teacher Create class","reach here before");
+        final DocumentReference documentReferenceTwo = firestore.collection("teachers").document(uuid);
+        documentReferenceTwo.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                classFromDb = (List<String>) documentSnapshot.get("classes");
+            }
+        });
         // Show all student that register to app.
         firestore.collection("students").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    String fullName;
+                    String email;
+                    String phone;
+                    List<String> skillsList;
+                    List<String> improveList;
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
-                        Student student = (Student) documentSnapshot.getData();
+                        phone=documentSnapshot.getString("phone");
+                        fullName=documentSnapshot.getString("fullName");
+                        email=documentSnapshot.getString("email");
+                        skillsList = (List<String>) documentSnapshot.get("skills");
+                        improveList = (List<String>) documentSnapshot.get("weaknesses");
+                        Student student = new Student(fullName,email,phone);
+                        student.getSkills().addAll(skillsList);
+                        student.getWeaknesses().addAll(improveList);
                         classStudents.add(student);
                     }
 
                     listView = findViewById(R.id.listView);
-                    final Teacher_Adapter teacher_adapter = new Teacher_Adapter(Teacher_Create_Class.this, classStudents);
+                    teacher_adapter = new Teacher_Adapter(Teacher_Create_Class.this, classStudents);
                     listView.setAdapter(teacher_adapter);
                     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            teacher_adapter.setSelectedIndex();
+                            teacher_adapter.setSelectedIndex(position);
 /*                           Teacher_Adapter.setSelectedIndex(position);
                             Teacher_Adapter.setItemColor(isClicked);*/
                             teacher_adapter.notifyDataSetChanged();
 
                             Student student = teacher_adapter.getItem(position);
-                            if(isClicked)
+                            if(teacher_adapter.isCliced[position])
                                 if(!classStudents.contains(student)){
                                     classStudents.add(student);
                                 }
@@ -97,8 +123,68 @@ public class Teacher_Create_Class extends AppCompatActivity {
             }
         });
 
+        submit.setOnClickListener(new View.OnClickListener() {
+
+            //TODO: create random uid per Classroom via randomGenerator
+            @Override
+            public void onClick(View v) {
+                DocumentReference documentReference = firestore.collection("classes").document();
+                Classroom classroom = new Classroom(classroom_textView.getText().toString());
+                classroom.setUuid(documentReference.toString());
+                classroom.setTeacher_uuid(uuid);
+                classes.add(classroom.getClass_name());
+                for (Student student : classStudents) {
+                    student.setClassroom(classroom.getUuid());
+                    classroom.addStudents(student);
+                }
+
+                documentReference.set(classroom).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
+                    }
+                });
 
 
+                /*Map<String, Student_v1> class_students = new HashMap<>();
+                for (Student student : classStudents) {
+                    class_students.put(student.getUuid(), student);
+                    documentReference.set(class_students).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(Teacher_Create_Class.this, "Teacher_HomePage created Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
+                        }
+                    });
+                }*/
+                //ToDO add connction between all studet to is class
+                classFromDb.addAll(classes);
+                documentReferenceTwo.update("classes", classFromDb);
+                Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
+                startActivity(intent);
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
+        startActivity(intent);
+
+    }
+
+}
 
 
 /*        firestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
@@ -172,78 +258,3 @@ public class Teacher_Create_Class extends AppCompatActivity {
             }
         }
     });*/
-
-        submit.setOnClickListener(new View.OnClickListener() {
-
-            //TODO: create random uid per Classroom via randomGenerator
-            @Override
-            public void onClick(View v) {
-                DocumentReference documentReference = firestore.collection("classes").document();
-                Classroom classroom = new Classroom(classroom_textView.getText().toString());
-                classroom.setUuid(documentReference.toString());
-                classroom.setTeacher_uuid(uuid);
-                classes.add(classroom.getClass_name());
-                for (Student student : classStudents) {
-                    student.setClassroom(classroom.getUuid());
-                    classroom.addStudents(student);
-                }
-
-                documentReference.set(classroom).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
-                    }
-                });
-
-
-                /*Map<String, Student_v1> class_students = new HashMap<>();
-                for (Student student : classStudents) {
-                    class_students.put(student.getUuid(), student);
-                    documentReference.set(class_students).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(Teacher_Create_Class.this, "Teacher_HomePage created Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
-                        }
-                    });
-                }*/
-
-                DocumentReference documentReferenceTwo = firestore.collection("teachers").document(uuid);
-                documentReferenceTwo.update("classes", classes);
-
-                Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
-                startActivity(intent);
-            }
-        });
-
-
-
-    }
-
-
-
-
-    @Override
-    public void onBackPressed() {
-        firebaseAuth.signOut();
-        Intent intent = new Intent(getApplicationContext(), Login.class);
-        startActivity(intent);
-
-    }
-
-    public static void setClicked(boolean clicked) {
-        isClicked = clicked;
-    }
-
-    public static boolean getClicked() { return isClicked; }
-}
-

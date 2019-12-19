@@ -2,6 +2,8 @@ package com.example.classmate.Teacher_Activities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +20,16 @@ public class Teacher_Adapter extends BaseAdapter {
 
     private final Context context;
     private ArrayList<Student> students;
+    public boolean [] isCliced;
 
     public Teacher_Adapter(Context context, ArrayList<Student> list){
         this.context=context;
         students = new ArrayList<>();
-        for(Student student : list)
+        isCliced = new boolean[list.size()];
+        for(Student student : list) {
             this.students.add(student);
+        }
+
     }
 
 
@@ -68,14 +74,17 @@ public class Teacher_Adapter extends BaseAdapter {
 
             rowView.setTag(viewHolder);
         }
+        Log.d("Teacher adapter", "reach here");
         ViewHolder holder = (ViewHolder) rowView.getTag();
         holder.fullName.setText(students.get(position).getFullName());
         holder.email.setText(students.get(position).getEmail());
         holder.phone.setText(students.get(position).getPhone());
-        holder.weaknesses.setText((CharSequence) students.get(position).getWeaknesses());
-        holder.skills.setText((CharSequence) students.get(position).getSkills());
+        String listString = TextUtils.join(", ", students.get(position).getWeaknesses());
+        holder.weaknesses.setText(listString);
+        listString=TextUtils.join(", ", students.get(position).getSkills());
+        holder.skills.setText(listString);
 
-        if(Teacher_Create_Class.getClicked())
+        if(isCliced[position])
             holder.linearLayout.setBackgroundColor(Color.GRAY);
         else
             holder.linearLayout.setBackgroundColor(Color.WHITE);
@@ -84,11 +93,12 @@ public class Teacher_Adapter extends BaseAdapter {
     }
 
 
-    public void setSelectedIndex() {
-        if(Teacher_Create_Class.getClicked())
-            Teacher_Create_Class.setClicked(false);
+    public void setSelectedIndex(int position) {
+        if(isCliced[position]){
+            isCliced[position]=false;
+        }
         else
-            Teacher_Create_Class.setClicked(true);
+            isCliced[position]=true;
     }
 
 

@@ -15,12 +15,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/improve"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/skills"
+        android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -31,7 +26,12 @@
         android:textAlignment="gravity" />
 
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/improve"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/skills"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
