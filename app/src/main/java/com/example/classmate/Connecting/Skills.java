@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class Skills extends AppCompatActivity {
+public class Skills extends AppCompatActivity{
 
     private Button sendButton;
     private FirebaseFirestore fStore;

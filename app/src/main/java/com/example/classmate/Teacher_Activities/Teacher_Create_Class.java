@@ -143,7 +143,6 @@ public class Teacher_Create_Class extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         documentReference.update("uuid",documentReference.getId());
                         classroom.setUuid(documentReference.getId());
-                        classes.add(classroom.getUuid());
                         Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -159,6 +158,9 @@ public class Teacher_Create_Class extends AppCompatActivity {
                         i--;
                     }
                 }
+                classes.add(classroom.getUuid());
+                Log.d("TEACHER C ",classes.toString());
+                Log.d("TEACHER C ",classFromDb.toString());
                 Log.d("TEACHER C ", studentUuid.size()+"");
                 for (Pair<Student,String> pair :studentUuid){
                     DocumentReference reference =firestore.collection("students").document(pair.second);
