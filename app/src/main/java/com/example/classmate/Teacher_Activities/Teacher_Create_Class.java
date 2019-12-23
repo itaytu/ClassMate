@@ -25,17 +25,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -47,6 +43,7 @@ public class Teacher_Create_Class extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ListView listView;
 
+    private ArrayList<Student> allStudents;
     private ArrayList<Student> classStudents;
     private Button submit;
     private TextView classroom_textView;
@@ -68,11 +65,15 @@ public class Teacher_Create_Class extends AppCompatActivity {
 
         classes = new ArrayList<>();
         classStudents = new ArrayList<>();
+
         Log.d("Teacher Create class","reach here before");
         final DocumentReference documentReferenceTwo = firestore.collection("teachers").document(uuid);
         documentReferenceTwo.addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot == null)
+                    return;
+
                 classFromDb = (List<String>) documentSnapshot.get("classes");
             }
         });
@@ -81,6 +82,8 @@ public class Teacher_Create_Class extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    allStudents = new ArrayList<>();
+
                     String fullName;
                     String email;
                     String phone;
@@ -97,11 +100,11 @@ public class Teacher_Create_Class extends AppCompatActivity {
                         student.getWeaknesses().addAll(improveList);
                         Pair<Student,String> pair =new Pair<>(student,documentSnapshot.getId());
                         studentUuid.add(pair);
-                        classStudents.add(student);
+                        allStudents.add(student);
                     }
 
                     listView = findViewById(R.id.listView);
-                    teacher_adapter = new Teacher_Adapter(Teacher_Create_Class.this, classStudents);
+                    teacher_adapter = new Teacher_Adapter(Teacher_Create_Class.this, allStudents);
                     listView.setAdapter(teacher_adapter);
                     listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -113,12 +116,15 @@ public class Teacher_Create_Class extends AppCompatActivity {
                             teacher_adapter.notifyDataSetChanged();
 
                             Student student = teacher_adapter.getItem(position);
-                            if(teacher_adapter.isCliced[position])
-                                if(!classStudents.contains(student)){
+                            if(teacher_adapter.isClicked[position]) {
+                                if (!classStudents.contains(student)) {
                                     classStudents.add(student);
                                 }
-                                else
+                            }
+                            else {
+                                if (classStudents.contains(student))
                                     classStudents.remove(student);
+                            }
                         }
                     });
                 }
@@ -153,7 +159,7 @@ public class Teacher_Create_Class extends AppCompatActivity {
                 });
 
                 for (int i = 0;i<studentUuid.size();i++){
-                    if (!classStudents.contains(studentUuid.get(i).first)){
+                    if (!allStudents.contains(studentUuid.get(i).first)){
                         studentUuid.remove(i);
                         i--;
                     }
@@ -180,7 +186,6 @@ public class Teacher_Create_Class extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
         startActivity(intent);
-
     }
 
 }

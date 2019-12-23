@@ -50,6 +50,9 @@ public class Algorithm extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for(QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
+                        if(documentSnapshot == null)
+                            return;
+
                         if (documentSnapshot.getId().equals(userId)){
                             weaknesses = (List<String>) documentSnapshot.get("weaknesses");
                             break;
@@ -59,6 +62,9 @@ public class Algorithm extends AppCompatActivity {
                     ArrayList<Student> students = new ArrayList<>();
                     if(weaknesses != null) {
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                            if (documentSnapshot == null)
+                                return;
+
                             if (!documentSnapshot.getId().equals(userId)) {
                                 ArrayList<String> skillsToLearn = new ArrayList<>();
                                 otherSkills = (List<String>) documentSnapshot.get("skills");

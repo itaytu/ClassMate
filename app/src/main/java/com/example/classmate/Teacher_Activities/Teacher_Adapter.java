@@ -20,12 +20,12 @@ public class Teacher_Adapter extends BaseAdapter {
 
     private final Context context;
     private ArrayList<Student> students;
-    public boolean [] isCliced;
+    public boolean [] isClicked;
 
     public Teacher_Adapter(Context context, ArrayList<Student> list){
         this.context=context;
         students = new ArrayList<>();
-        isCliced = new boolean[list.size()];
+        isClicked = new boolean[list.size()];
         for(Student student : list) {
             this.students.add(student);
         }
@@ -82,7 +82,7 @@ public class Teacher_Adapter extends BaseAdapter {
         listString=TextUtils.join(", ", students.get(position).getSkills());
         holder.skills.setText(listString);
 
-        if(isCliced[position])
+        if(isClicked[position])
             holder.linearLayout.setBackgroundColor(Color.GRAY);
         else
             holder.linearLayout.setBackgroundColor(Color.WHITE);
@@ -92,11 +92,11 @@ public class Teacher_Adapter extends BaseAdapter {
 
 
     public void setSelectedIndex(int position) {
-        if(isCliced[position]){
-            isCliced[position]=false;
+        if(isClicked[position]){
+            isClicked[position]=false;
         }
         else
-            isCliced[position]=true;
+            isClicked[position]=true;
     }
 
 
