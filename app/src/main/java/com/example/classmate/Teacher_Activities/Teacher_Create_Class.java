@@ -186,79 +186,8 @@ public class Teacher_Create_Class extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
         startActivity(intent);
+
     }
 
 }
 
-
-/*        firestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
-
-        @Override
-        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-            final ArrayList<Student_v1> studentV1ArrayList =new ArrayList<>();
-            String fullName;
-            String email;
-            String phone;
-            List<String> skillsList;
-            List<String> improveList;
-            if (task.isSuccessful()){
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                    if(documentSnapshot.getBoolean("isStudent")) {
-                        String skills="";
-                        String improve="";
-                        fullName = documentSnapshot.getString("Full-Name");
-                        email = documentSnapshot.getString("Email");
-                        phone = documentSnapshot.getString("Phone");
-                        skillsList = (List<String>) documentSnapshot.get("skills");
-                        improveList = (List<String>) documentSnapshot.get("improve");
-
-                        if(skillsList != null) {
-                            for (String s : skillsList) {
-                                if (skills.isEmpty()) {
-                                    skills = skills + s;
-                                } else
-                                    skills = skills + " ," + s;
-                            }
-                        }
-
-                        if(improveList != null) {
-                            for (String s : improveList) {
-                                if (improve.isEmpty()) {
-                                    improve = improve + s;
-                                } else
-                                    improve = improve + " ," + s;
-                            }
-                        }
-
-                        Student_v1 studentV1 = new Student_v1(documentSnapshot.getId(), fullName, email, phone, skills, improve);
-                        studentV1ArrayList.add(studentV1);
-                    }
-                    else if(documentSnapshot.getId().equals(uuid)) {
-                        classes = (List<String>) documentSnapshot.get("classes");
-                    }
-
-                }
-                listView = findViewById(R.id.listView);
-                final Teacher_Adapter Teacher_Adapter = new Teacher_Adapter(Teacher_Create_Class.this, studentV1ArrayList);
-                listView.setAdapter(Teacher_Adapter);
-                listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Teacher_Adapter.setSelectedIndex(position);
-                        Teacher_Adapter.notifyDataSetChanged();
-
-                        Student_v1 studentV1 = Teacher_Adapter.getItem(position);
-                        if(studentV1.isClicked())
-                            if(!classStudentV1s.contains(studentV1)){
-                                classStudentV1s.add(studentV1);
-                            }
-                        else
-                            classStudentV1s.remove(studentV1);
-                    }
-                });
-            }else{
-                Log.d("Teacher_Create_Class","Error: ", task.getException());
-            }
-        }
-    });*/

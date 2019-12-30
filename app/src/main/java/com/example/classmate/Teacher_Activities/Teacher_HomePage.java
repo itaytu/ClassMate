@@ -3,7 +3,9 @@ package com.example.classmate.Teacher_Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +13,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.example.classmate.Connecting.Login;
-import com.example.classmate.MyExpandableListAdapter;
+import com.example.classmate.Models.Student;
 import com.example.classmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -46,8 +48,8 @@ public class Teacher_HomePage extends AppCompatActivity {
 
     private List<String> teacherClasses = new ArrayList<>();
     private String uuid;
-    private HashMap<String, List<String>> hashMap;
-
+    private HashMap<String, List<Student>> hashMap;
+    //TODO add phone clicked
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,11 +63,7 @@ public class Teacher_HomePage extends AppCompatActivity {
         firestore= FirebaseFirestore.getInstance();
         uuid=firebaseAuth.getUid();
 
-        Log.d("HomePage",uuid);
-
-        //TODO need to create map <name class ,students> and show in expandable list view.
         final DocumentReference documentReference = firestore.collection("teachers").document(uuid);
-
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
 
             @Override
@@ -79,19 +77,30 @@ public class Teacher_HomePage extends AppCompatActivity {
                 for (int i = 0; i < Objects.requireNonNull(teacherClasses).size(); i++){
                     CollectionReference collectionReference = firestore.collection("classes");
                     Query query = collectionReference.whereEqualTo("uuid", teacherClasses.get(i));
-                    Log.d("query", "onEvent: "+query.get());
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()) {
                                 for (QueryDocumentSnapshot queryDocumentSnapshot : Objects.requireNonNull(task.getResult())) {
-                                    Log.d("teacher class", "onEvent: " + queryDocumentSnapshot.getString("class_name"));
-                                    List<HashMap<String, String>> list= (List<HashMap<String, String>>) queryDocumentSnapshot.get("studentsList");
+                                    String fullName;
+                                    String email;
+                                    String phone;
+                                    List<String> skillsList;
+                                    List<String> improveList;
+                                    List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) queryDocumentSnapshot.get("studentsList");
                                     assert list != null;
-                                    List<String> students = new ArrayList<>();
+                                    List<Student> students = new ArrayList<>();
                                     for(int i = 0; i<list.size(); i++){
-                                        HashMap<String, String> map= list.get(i);
-                                        students.add(map.get("fullName"));
+                                        HashMap<String, Object> map= list.get(i);
+                                        fullName=(String) map.get("fullName");
+                                        email=(String) map.get("email");
+                                        phone=(String) map.get("phone");
+                                        skillsList = (List<String>) map.get("skills");
+                                        improveList = (List<String>) map.get("weaknesses");
+                                        Student student = new Student(fullName,email,phone);
+                                        student.getSkills().addAll(skillsList);
+                                        student.getWeaknesses().addAll(improveList);
+                                        students.add(student);
                                     }
                                     hashMap.put(queryDocumentSnapshot.getString("class_name"),students);
                                     MyExpandableListAdapter myExpandableListAdapter = new MyExpandableListAdapter(hashMap);
@@ -104,14 +113,6 @@ public class Teacher_HomePage extends AppCompatActivity {
                         }
                     });
 
-/*                    CollectionReference collectionReference = firestore.collection("classes");
-                    DocumentReference documentReference1 = collectionReference.where(collectionReference.getId(), teacherClasses.get(i)).get();
-                    documentReference1.addSnapshotListener(Teacher_HomePage.this ,new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                            Log.d("teacher class", "onEvent: "+ Objects.requireNonNull(documentSnapshot).getString("class_name"));
-                        }
-                    });*/
                 }
             }
         });
