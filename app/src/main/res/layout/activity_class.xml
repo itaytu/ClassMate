@@ -7,17 +7,17 @@
     tools:context=".Teacher_Activities.Teacher_HomePage">
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Class"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07999998" />
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Class"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.07999998"
+            android:fontFamily="@font/annie_use_your_telescope"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addClass"
@@ -33,15 +33,19 @@
         app:layout_constraintVertical_bias="0.942"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <ExpandableListView
-        android:id="@+id/expanable_list_view"
-        android:layout_width="407dp"
-        android:layout_height="505dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8"
-        app:layout_constraintVertical_bias="0.16000003" />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="427dp"
+            android:layout_height="500dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/textView8"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.24000001">
+        <ExpandableListView
+                android:id="@+id/expanable_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+        />
+    </LinearLayout>
     <Button
         android:id="@+id/signOut"
         android:layout_width="wrap_content"

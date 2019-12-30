@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 
 import com.example.classmate.Connecting.Login;
+import com.example.classmate.MyExpandableListAdapter;
 import com.example.classmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,6 +28,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,7 +46,7 @@ public class Teacher_HomePage extends AppCompatActivity {
 
     private List<String> teacherClasses = new ArrayList<>();
     private String uuid;
-
+    private HashMap<String, List<String>> hashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class Teacher_HomePage extends AppCompatActivity {
         signOut = findViewById(R.id.signOut);
         addClassButton = findViewById(R.id.addClass);
         expandableListView = findViewById(R.id.expanable_list_view);
-
+        hashMap = new HashMap<>();
         firebaseAuth = FirebaseAuth.getInstance();
         firestore= FirebaseFirestore.getInstance();
         uuid=firebaseAuth.getUid();
@@ -73,15 +75,28 @@ public class Teacher_HomePage extends AppCompatActivity {
 
                 Log.d("Test", "onEvent: " + Objects.requireNonNull(documentSnapshot).toString());
                 teacherClasses = (List<String>) documentSnapshot.get("classes");
+                Log.d("size", "onEvent: "+teacherClasses.size());
                 for (int i = 0; i < Objects.requireNonNull(teacherClasses).size(); i++){
                     CollectionReference collectionReference = firestore.collection("classes");
-                    Query query = collectionReference.whereEqualTo(collectionReference.document().getId(), teacherClasses.get(i));
+                    Query query = collectionReference.whereEqualTo("uuid", teacherClasses.get(i));
+                    Log.d("query", "onEvent: "+query.get());
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if(task.isSuccessful()) {
-                                for (QueryDocumentSnapshot queryDocumentSnapshot : Objects.requireNonNull(task.getResult()))
+                                for (QueryDocumentSnapshot queryDocumentSnapshot : Objects.requireNonNull(task.getResult())) {
                                     Log.d("teacher class", "onEvent: " + queryDocumentSnapshot.getString("class_name"));
+                                    List<HashMap<String, String>> list= (List<HashMap<String, String>>) queryDocumentSnapshot.get("studentsList");
+                                    assert list != null;
+                                    List<String> students = new ArrayList<>();
+                                    for(int i = 0; i<list.size(); i++){
+                                        HashMap<String, String> map= list.get(i);
+                                        students.add(map.get("fullName"));
+                                    }
+                                    hashMap.put(queryDocumentSnapshot.getString("class_name"),students);
+                                    MyExpandableListAdapter myExpandableListAdapter = new MyExpandableListAdapter(hashMap);
+                                    expandableListView.setAdapter(myExpandableListAdapter);
+                                }
                             }
                             else {
                                 Log.d("ERROR: ", Objects.requireNonNull(task.getException()).toString());
