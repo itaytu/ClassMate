@@ -1,23 +1,23 @@
 package com.example.classmate.Student_Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
-import com.example.classmate.Models.Student;
 import com.example.classmate.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 public class Algorithm extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
@@ -26,7 +26,7 @@ public class Algorithm extends AppCompatActivity {
     private String userId;
     private List<String> weaknesses = new ArrayList<>();
     private List<String> otherSkills = new ArrayList<>();
-
+    private String myClass;
     private ListView listView;
 
     @Override
@@ -38,13 +38,33 @@ public class Algorithm extends AppCompatActivity {
         firestore=FirebaseFirestore.getInstance();
         userId = firebaseAuth.getCurrentUser().getUid();
 
-//        DocumentReference documentReference =firestore.collection("users").document(userId);
-//        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                weaknesses= (List<String>) documentSnapshot.get("improve");
-//            }
-//        });
+       final DocumentReference documentReference= firestore.collection("students").document(userId);
+
+       documentReference.addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
+           @Override
+           public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+               weaknesses = (List<String>) documentSnapshot.get("weaknesses");
+               myClass=documentSnapshot.getString("classroom");
+           }
+           DocumentReference documentReferenceClass = (DocumentReference) firestore.collection("classes").document(myClass).addSnapshotListener(Algorithm.this,new EventListener<DocumentSnapshot>() {
+               @Override
+               public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                   List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) documentSnapshot.get("studentsList");
+                   for (HashMap<String, Object> map:list){
+
+                   }
+               }
+           });
+
+       });
+
+
+
+
+
+    }
+}
+/*
         firestore.collection("students").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -90,9 +110,4 @@ public class Algorithm extends AppCompatActivity {
                     listView.setAdapter(algorithm_adapter);
                 }
             }
-        });
-
-
-
-    }
-}
+        });*/

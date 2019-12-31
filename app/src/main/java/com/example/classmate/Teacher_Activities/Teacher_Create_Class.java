@@ -36,7 +36,7 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-//TODO: move logic from adapter to different class
+//TODO: Need to reduce student that selected to class
 
 public class Teacher_Create_Class extends AppCompatActivity {
     private FirebaseFirestore firestore;
@@ -111,8 +111,6 @@ public class Teacher_Create_Class extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             teacher_adapter.setSelectedIndex(position);
-/*                           Teacher_Adapter.setSelectedIndex(position);
-                            Teacher_Adapter.setItemColor(isClicked);*/
                             teacher_adapter.notifyDataSetChanged();
 
                             Student student = teacher_adapter.getItem(position);
@@ -157,17 +155,21 @@ public class Teacher_Create_Class extends AppCompatActivity {
                         Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
                     }
                 });
-
+                boolean isClicked = true;
                 for (int i = 0;i<studentUuid.size();i++){
-                    if (!allStudents.contains(studentUuid.get(i).first)){
+                    for(Student student : classStudents){
+                        if (student.getFullName().equals(studentUuid.get(i).first.getFullName())){
+                            isClicked=false;
+                            break;
+                        }
+                    }
+                    if (isClicked){
                         studentUuid.remove(i);
                         i--;
                     }
+                    isClicked=true;
                 }
                 classes.add(classroom.getUuid());
-                Log.d("TEACHER C ",classes.toString());
-                Log.d("TEACHER C ",classFromDb.toString());
-                Log.d("TEACHER C ", studentUuid.size()+"");
                 for (Pair<Student,String> pair :studentUuid){
                     DocumentReference reference =firestore.collection("students").document(pair.second);
                     reference.update("classroom",classroom.getUuid());
