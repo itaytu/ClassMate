@@ -1,5 +1,7 @@
 package com.example.classmate.Models;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class Student {
@@ -84,5 +86,11 @@ public class Student {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getFullName()+" , " + this.getSkills()+" , " + this.getWeaknesses();
     }
 }
