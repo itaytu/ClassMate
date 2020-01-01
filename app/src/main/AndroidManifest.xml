@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.classmate">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:allowBackup="true"
@@ -13,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Teacher.teacher_homePage"></activity>
-        <activity android:name=".Student.Algorithm" />
-        <activity android:name=".Teacher.Teacher" />
-        <activity android:name=".Connecting.Improve" />
+        <activity android:name=".Teacher_Activities.Teacher_HomePage"></activity>
+        <activity android:name=".Student_Activities.Algorithm" />
+        <activity android:name=".Teacher_Activities.Teacher_Create_Class" />
+        <activity android:name=".Connecting.Weaknesses" />
         <activity android:name=".Connecting.Skills" />
         <activity android:name=".Connecting.Login">
             <intent-filter>
@@ -25,8 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Student.HomePage" />
+        <activity android:name=".Student_Activities.Student_HomePage" />
         <activity android:name=".Connecting.Register" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

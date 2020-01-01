@@ -1,9 +1,10 @@
-package com.example.classmate.Student;
+package com.example.classmate.Student_Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class HomePage extends AppCompatActivity {
+public class Student_HomePage extends AppCompatActivity {
 
     private TextView fullName , email ,phone,skills,improves;
     private FirebaseAuth fAuth;
@@ -49,31 +50,19 @@ public class HomePage extends AppCompatActivity {
         logout= findViewById(R.id.logout_button);
 
         findMatch = findViewById(R.id.findMatch);
-
         useId = fAuth.getCurrentUser().getUid();
-        DocumentReference documentReference = fStore.collection("users").document(useId);
+        DocumentReference documentReference = fStore.collection("students").document(useId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Log.d("PROFILE", "here");
-                phone.append(documentSnapshot.getString("Phone"));
-                fullName.append(documentSnapshot.getString("Full-Name"));
-                email.append(documentSnapshot.getString("Email"));
+                phone.append(documentSnapshot.getString("phone"));
+                fullName.append(documentSnapshot.getString("fullName"));
+                email.append(documentSnapshot.getString("email"));
                 skillsList = (List<String>) documentSnapshot.get("skills");
-                improvesList = (List<String>) documentSnapshot.get("improve");
-                for(String s :skillsList){
-                    if (stringSkills.isEmpty()){
-                        stringSkills = stringSkills+s;
-                    }else
-                    stringSkills = stringSkills+ " ," +s ;
-
-                }
-                for (String s:improvesList){
-                    if (stringImproves.isEmpty()){
-                        stringImproves = stringImproves+s;
-                    }else
-                    stringImproves = stringImproves+ " ," +s ;
-                }
+                improvesList = (List<String>) documentSnapshot.get("weaknesses");
+                String stringSkills = TextUtils.join(", ", skillsList);
+                String stringImproves = TextUtils.join(", ", improvesList);
                 skills.append(stringSkills);
                 improves.append(stringImproves);
             }

@@ -10,8 +10,10 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:text="Welcome to Classmate"
-        android:textSize="25sp"
+        android:textSize="36sp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:text="Create New Account"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -97,14 +101,18 @@
 
     <Button
         android:id="@+id/register_button"
-        android:layout_width="0dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="76dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/custom_button"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:text="Register"
+        android:textAllCaps="false"
+        android:textColor="#3F51B5"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone_textView" />
 
@@ -115,6 +123,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        android:fontFamily="@font/ubuntu_light"
         android:onClick="backTologin"
         android:text="Back to Login"
         android:textColor="@color/design_default_color_primary"
@@ -136,16 +145,20 @@
             android:id="@+id/isTeacher_radioButton"
             android:layout_width="94dp"
             android:layout_height="match_parent"
+            android:fontFamily="@font/ubuntu_light"
+            android:onClick="checkButton"
             android:text="Teacher"
-            android:onClick="checkButton"/>
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/isStudent_radioButton"
             android:layout_width="94dp"
             android:layout_height="match_parent"
-            android:text="Student"
+            android:checked="true"
+            android:fontFamily="@font/ubuntu_light"
             android:onClick="checkButton"
-            android:checked="true"/>
+            android:text="Student"
+            android:textSize="14sp" />
     </RadioGroup>
 
     <ProgressBar

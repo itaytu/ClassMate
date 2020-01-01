@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Student.HomePage">
+    tools:context=".Student_Activities.Student_HomePage">
 
     <TextView
         android:id="@+id/textView"
@@ -92,8 +92,8 @@
 
     <Button
         android:id="@+id/findMatch"
-        android:layout_width="188dp"
-        android:layout_height="65dp"
+        android:layout_width="178dp"
+        android:layout_height="54dp"
         android:text="Find Match"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"

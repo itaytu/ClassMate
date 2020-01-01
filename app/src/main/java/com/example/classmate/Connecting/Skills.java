@@ -4,19 +4,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+import com.example.classmate.Models.Student;
 import com.example.classmate.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Skills extends AppCompatActivity {
+import javax.annotation.Nullable;
+
+public class Skills extends AppCompatActivity{
 
     private Button sendButton;
     private FirebaseFirestore fStore;
@@ -33,6 +40,7 @@ public class Skills extends AppCompatActivity {
     private CheckBox chemistry;
     private CheckBox programming;
     private CheckBox biology;
+    private Student student;
 
 
     @Override
@@ -68,9 +76,8 @@ public class Skills extends AppCompatActivity {
                     public void onClick(View v) {
 
                         userId = fAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = fStore.collection("users").document(userId);
+                        DocumentReference documentReference = fStore.collection("students").document(userId);
                         List<String> skillsList = new LinkedList<>();
-
                         if(english.isChecked())
                             skillsList.add("english");
                         if(french.isChecked())
@@ -94,7 +101,8 @@ public class Skills extends AppCompatActivity {
 
                         if(!skillsList.isEmpty()) {
                             documentReference.update("skills", skillsList);
-                            Intent intent = new Intent(getApplicationContext(), Improve.class);
+                            Log.d("Skills","go to next activity");
+                            Intent intent = new Intent(getApplicationContext(), Weaknesses.class);
                             startActivity(intent);
                         }
 

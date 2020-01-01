@@ -4,20 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.classmate.Student.HomePage;
+import com.example.classmate.Student_Activities.Student_HomePage;
 import com.example.classmate.R;
-import com.example.classmate.Teacher.teacher_homePage;
+import com.example.classmate.Teacher_Activities.Teacher_HomePage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,20 +32,22 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.Objects;
+
 import javax.annotation.Nullable;
 
 public class Login extends AppCompatActivity {
 
     private Button loginButton;
-    private Button register;
-    private EditText emailEditText;
-    private EditText passwordEditText;
+//    private Button register;
+    private TextView register;
+    private EditText emailEditText , passwordEditText ;
     private boolean pflag = false, eflag = false;
     private FirebaseAuth mAuth;
     private static final String TAG = "Login";
     private FirebaseFirestore firestore;
     private String userId;
-    private Boolean teacherOrStudent;
+    private Boolean isTeacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +56,9 @@ public class Login extends AppCompatActivity {
 
 
         loginButton = findViewById(R.id.loginButton);
-        register=findViewById(R.id.register);
+        register=findViewById(R.id.register_textView);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
-
 
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -138,28 +143,28 @@ public class Login extends AppCompatActivity {
                         Log.d(TAG, "into the func");
                         if (task.isSuccessful()) {
                             eflag=pflag=true;
-                            // Sign in success, update UI with the signed-in user's information
+                            // Sign in success, update UI with the signed-in User's information
                             userId = mAuth.getCurrentUser().getUid();
                             DocumentReference documentReference =firestore.collection("users").document(userId);
                             documentReference.addSnapshotListener(Login.this,new EventListener<DocumentSnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                    teacherOrStudent =documentSnapshot.getBoolean("isStudent");
-                                    Log.d("Login","is student : "+ teacherOrStudent.booleanValue());
+                                    isTeacher = Objects.requireNonNull(documentSnapshot).getBoolean("teacher");
+                                    Log.d("Login","is teacher: " + isTeacher);
                                     Intent intent;
-                                    if (teacherOrStudent){
+                                    if (isTeacher){
                                         Log.d(TAG, "signInWithEmail:success");
-                                         intent = new Intent(getApplicationContext(), HomePage.class);
+                                         intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
 
                                     }else{
-                                         intent = new Intent(getApplicationContext(), teacher_homePage.class);
+                                         intent = new Intent(getApplicationContext(), Student_HomePage.class);
                                     }
                                     startActivity(intent);
                                 }
                             });
 
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a message to the User.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(Login.this, "Check your email and password",
                                     Toast.LENGTH_SHORT).show();
@@ -176,6 +181,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(eflag&&pflag) {
+                    Vibrator vibrator = (Vibrator) Login.this.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(5000);
                     checkEMAILpassword();
                 }else{
                     Toast.makeText(Login.this, "Invalid email or password.",
