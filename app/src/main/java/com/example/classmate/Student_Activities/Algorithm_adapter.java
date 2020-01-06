@@ -1,5 +1,6 @@
 package com.example.classmate.Student_Activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ public class Algorithm_adapter extends ArrayAdapter<Student> {
         super(context, 0, objects);
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -33,13 +35,14 @@ public class Algorithm_adapter extends ArrayAdapter<Student> {
         TextView skill= convertView.findViewById(R.id.skills);
         TextView weaknesses= convertView.findViewById(R.id.improve);
         Student student = getItem(position);
-
-        fullName.setText(student.getFullName());
-        email.setText(student.getEmail());
-        phone.setText(student.getPhone());
-        skill.setText("Can teach you: "+(TextUtils.join(", ",student.getSkills())));
-        weaknesses.setText("Can teach you: "+(TextUtils.join(", ",student.getWeaknesses())));
-
+        if(student != null) {
+            fullName.setText(student.getFullName());
+            email.setText(student.getEmail());
+            phone.setText(student.getPhone());
+            skill.setText("Wants to teach: " + (TextUtils.join(", ", student.getSkills())));
+            weaknesses.setText("Wants to learn: " + (TextUtils.join(", ", student.getWeaknesses())));
+        }
+        else return null;
         return convertView;
     }
 }

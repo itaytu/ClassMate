@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,24 +42,24 @@ public class Skills extends AppCompatActivity{
     private CheckBox chemistry;
     private CheckBox programming;
     private CheckBox biology;
-    private Student student;
 
+    private ArrayList<String> skillsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skills);
 
-        english = (CheckBox) findViewById(R.id.english);
-        french = (CheckBox) findViewById(R.id.french);
-        hebrew = (CheckBox) findViewById(R.id.hebrew);
-        spanish = (CheckBox) findViewById(R.id.spanish);
-        arabic = (CheckBox) findViewById(R.id.arabic);
-        physics = (CheckBox) findViewById(R.id.physics);
-        math = (CheckBox) findViewById(R.id.math);
-        chemistry = (CheckBox) findViewById(R.id.chemistry);
-        programming = (CheckBox) findViewById(R.id.programming);
-        biology = (CheckBox) findViewById(R.id.biology);
+        english = findViewById(R.id.english);
+        french = findViewById(R.id.french);
+        hebrew = findViewById(R.id.hebrew);
+        spanish = findViewById(R.id.spanish);
+        arabic = findViewById(R.id.arabic);
+        physics = findViewById(R.id.physics);
+        math = findViewById(R.id.math);
+        chemistry = findViewById(R.id.chemistry);
+        programming = findViewById(R.id.programming);
+        biology = findViewById(R.id.biology);
 
         fAuth = FirebaseAuth.getInstance();
         sendButton=findViewById(R.id.send);
@@ -77,7 +79,7 @@ public class Skills extends AppCompatActivity{
 
                         userId = fAuth.getCurrentUser().getUid();
                         DocumentReference documentReference = fStore.collection("students").document(userId);
-                        List<String> skillsList = new LinkedList<>();
+                        skillsList = new ArrayList<>();
                         if(english.isChecked())
                             skillsList.add("english");
                         if(french.isChecked())
@@ -103,6 +105,7 @@ public class Skills extends AppCompatActivity{
                             documentReference.update("skills", skillsList);
                             Log.d("Skills","go to next activity");
                             Intent intent = new Intent(getApplicationContext(), Weaknesses.class);
+                            intent.putStringArrayListExtra("skillsList", skillsList);
                             startActivity(intent);
                         }
 

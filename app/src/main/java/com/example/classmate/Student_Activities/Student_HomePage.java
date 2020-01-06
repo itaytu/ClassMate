@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.classmate.Connecting.Login;
 import com.example.classmate.R;
@@ -26,15 +27,18 @@ import javax.annotation.Nullable;
 
 public class Student_HomePage extends AppCompatActivity {
 
-    private TextView fullName , email ,phone,skills,improves;
+    private TextView fullName , email , phone, skills, weaknesses;
+    private Button logout , findMatch;
+
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
-    private String useId;
+
+    private String uid;
+    private String classroomId;
+
     private List<String> skillsList = new ArrayList<>();
-    private List<String> improvesList = new ArrayList<>();
-    private String stringImproves="";
-    private String stringSkills="";
-    private Button logout , findMatch;
+    private List<String> weaknessesList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +48,14 @@ public class Student_HomePage extends AppCompatActivity {
         email = findViewById(R.id.profileEmail);
         phone = findViewById(R.id.profilePhoneNumber);
         skills = findViewById(R.id.skills);
-        improves= findViewById(R.id.improves);
+        weaknesses = findViewById(R.id.improves);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         logout= findViewById(R.id.logout_button);
 
         findMatch = findViewById(R.id.findMatch);
-        useId = fAuth.getCurrentUser().getUid();
-        DocumentReference documentReference = fStore.collection("students").document(useId);
+        uid = fAuth.getCurrentUser().getUid();
+        DocumentReference documentReference = fStore.collection("students").document(uid);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -59,12 +63,13 @@ public class Student_HomePage extends AppCompatActivity {
                 phone.append(documentSnapshot.getString("phone"));
                 fullName.append(documentSnapshot.getString("fullName"));
                 email.append(documentSnapshot.getString("email"));
+                classroomId = documentSnapshot.getString("classroom");
                 skillsList = (List<String>) documentSnapshot.get("skills");
-                improvesList = (List<String>) documentSnapshot.get("weaknesses");
+                weaknessesList = (List<String>) documentSnapshot.get("weaknesses");
                 String stringSkills = TextUtils.join(", ", skillsList);
-                String stringImproves = TextUtils.join(", ", improvesList);
+                String stringImproves = TextUtils.join(", ", weaknessesList);
                 skills.append(stringSkills);
-                improves.append(stringImproves);
+                weaknesses.append(stringImproves);
             }
 
         });
@@ -79,8 +84,12 @@ public class Student_HomePage extends AppCompatActivity {
         findMatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Algorithm.class);
-                startActivity(intent);
+                if(classroomId.isEmpty())
+                    Toast.makeText(Student_HomePage.this, "You are not assigned to any class", Toast.LENGTH_SHORT).show();
+                else {
+                    Intent intent = new Intent(getApplicationContext(), Algorithm.class);
+                    startActivity(intent);
+                }
             }
         });
 

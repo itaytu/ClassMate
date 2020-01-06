@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,14 +15,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Weaknesses extends AppCompatActivity {
 
     private Button sendButton;
     private FirebaseFirestore fStore;
-    private  String userId;
     private FirebaseAuth fAuth;
 
     private CheckBox english;
@@ -34,6 +36,9 @@ public class Weaknesses extends AppCompatActivity {
     private CheckBox chemistry;
     private CheckBox programming;
     private CheckBox biology;
+
+    private  String userId;
+    private ArrayList<String> skills;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,19 @@ public class Weaknesses extends AppCompatActivity {
         sendButton=findViewById(R.id.send);
         fStore=FirebaseFirestore.getInstance();
 
+        skills = getIntent().getStringArrayListExtra("skillsList");
+        Log.d("SKILLS: ", Objects.requireNonNull(skills).toString());
+
+        disableSkills();
         send();
+    }
+
+    private void disableSkills() {
+            for(String skill : skills) {
+                int resID = getResources().getIdentifier(skill, "id", getPackageName());
+                CheckBox tmp = findViewById(resID);
+                tmp.setEnabled(false);
+            }
     }
 
     protected void send() {

@@ -52,6 +52,9 @@ public class Teacher_Create_Class extends AppCompatActivity {
     private List<String> classFromDb;
     private List<Pair<Student,String>> studentUuid;
     private Teacher_Adapter teacher_adapter;
+
+    private boolean isContained;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,6 @@ public class Teacher_Create_Class extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot == null)
                     return;
-
                 classFromDb = (List<String>) documentSnapshot.get("classes");
             }
         });
@@ -88,16 +90,19 @@ public class Teacher_Create_Class extends AppCompatActivity {
                     String email;
                     String phone;
                     List<String> skillsList;
-                    List<String> improveList;
+                    List<String> weaknessesList;
+
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                        if(!documentSnapshot.getString("classroom").isEmpty())
+                            continue;
                         phone=documentSnapshot.getString("phone");
                         fullName=documentSnapshot.getString("fullName");
                         email=documentSnapshot.getString("email");
                         skillsList = (List<String>) documentSnapshot.get("skills");
-                        improveList = (List<String>) documentSnapshot.get("weaknesses");
+                        weaknessesList = (List<String>) documentSnapshot.get("weaknesses");
                         Student student = new Student(fullName,email,phone);
                         student.getSkills().addAll(skillsList);
-                        student.getWeaknesses().addAll(improveList);
+                        student.getWeaknesses().addAll(weaknessesList);
                         Pair<Student,String> pair =new Pair<>(student,documentSnapshot.getId());
                         studentUuid.add(pair);
                         allStudents.add(student);
@@ -134,52 +139,72 @@ public class Teacher_Create_Class extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final DocumentReference documentReference = firestore.collection("classes").document();
-                final Classroom classroom = new Classroom(classroom_textView.getText().toString());
-                classroom.setUuid(documentReference.getId());
-                classroom.setTeacher_uuid(uuid);
-                for (Student student : classStudents) {
-                    student.setClassroom(classroom.getUuid());
-                    classroom.addStudents(student);
-                }
+                final String className = classroom_textView.getText().toString();
+                isContained = false;
+                firestore.collection("classes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                if (queryDocumentSnapshot.getString("class_name").equals(className)) {
+                                    Toast.makeText(Teacher_Create_Class.this, "Class name already exists", Toast.LENGTH_SHORT).show();
+                                    classroom_textView.append("");
+                                    isContained = true;
+                                    break;
+                                }
+                            }
+                            if(!isContained){
+                                final Classroom classroom = new Classroom(classroom_textView.getText().toString());
+                                classroom.setUuid(documentReference.getId());
+                                classroom.setTeacher_uuid(uuid);
+                                for (Student student : classStudents) {
+                                    student.setClassroom(classroom.getUuid());
+                                    classroom.addStudents(student);
+                                }
 
-                documentReference.set(classroom).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        documentReference.update("uuid",documentReference.getId());
-                        classroom.setUuid(documentReference.getId());
-                        Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
-                    }
-                });
-                boolean isClicked = true;
-                for (int i = 0;i<studentUuid.size();i++){
-                    for(Student student : classStudents){
-                        if (student.getFullName().equals(studentUuid.get(i).first.getFullName())){
-                            isClicked=false;
-                            break;
+                                documentReference.set(classroom).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        documentReference.update("uuid",documentReference.getId());
+                                        classroom.setUuid(documentReference.getId());
+                                        Toast.makeText(Teacher_Create_Class.this, "class created Successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("CLASS_CREATION", "Failed to create Classroom: " + e.toString());
+                                    }
+                                });
+                                boolean isClicked = true;
+                                for (int i = 0;i<studentUuid.size();i++){
+                                    for(Student student : classStudents){
+                                        if (student.getFullName().equals(studentUuid.get(i).first.getFullName())){
+                                            isClicked=false;
+                                            break;
+                                        }
+                                    }
+                                    if (isClicked){
+                                        studentUuid.remove(i);
+                                        i--;
+                                    }
+                                    isClicked=true;
+                                }
+                                classes.add(classroom.getUuid());
+                                for (Pair<Student,String> pair :studentUuid){
+                                    DocumentReference reference =firestore.collection("students").document(pair.second);
+                                    reference.update("classroom",classroom.getUuid());
+                                }
+                                classFromDb.addAll(classes);
+                                documentReferenceTwo.update("classes", classFromDb);
+                                Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
+                                startActivity(intent);
+                            }
+
                         }
+                        else
+                            Log.d("FIRESTORE ERROR: ", task.getException().toString());
                     }
-                    if (isClicked){
-                        studentUuid.remove(i);
-                        i--;
-                    }
-                    isClicked=true;
-                }
-                classes.add(classroom.getUuid());
-                for (Pair<Student,String> pair :studentUuid){
-                    DocumentReference reference =firestore.collection("students").document(pair.second);
-                    reference.update("classroom",classroom.getUuid());
-                }
-                classFromDb.addAll(classes);
-                documentReferenceTwo.update("classes", classFromDb);
-                Intent intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
-                startActivity(intent);
-
-            }
+                });            }
         });
 
     }

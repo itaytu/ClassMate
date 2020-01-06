@@ -200,12 +200,6 @@ public class Register extends AppCompatActivity {
     private void populateCollections(String fullName, String email, String phone, Boolean isTeacher) {
         //Populate collection with all users
         DocumentReference documentReferenceUsers = fStore.collection("users").document(uuid);
-        /*Map<String, Object> user = new HashMap<>();
-        user.put("Full-Name", fullName);
-        user.put("Email", email);
-        user.put("Phone", phone);
-        user.put("isTeacher", isTeacher);
-        user.put("isStudent", isStudent);*/
 
         User user = new User(fullName, email, phone, isTeacher);
         documentReferenceUsers.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -239,10 +233,6 @@ public class Register extends AppCompatActivity {
 
         else {
             DocumentReference documentReferenceStudents = fStore.collection("students").document(uuid);
-            /*Map<String, Object> student = new HashMap<>();
-            student.put("full_name", fullName);
-            student.put("email", email);
-            student.put("phone", phone);*/
             Student student = new Student(fullName, email, phone);
             documentReferenceStudents.set(student).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -258,10 +248,6 @@ public class Register extends AppCompatActivity {
         }
 
     }
-
-
-
-
 
 
     private final static boolean isValidEmail(CharSequence target) {
@@ -287,10 +273,12 @@ public class Register extends AppCompatActivity {
         return true;
     }
 
+
     public void backTologin(View v){
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
     }
+
 
     public void checkButton(View view) {
         int radioID = userRadioGroup.getCheckedRadioButtonId();
