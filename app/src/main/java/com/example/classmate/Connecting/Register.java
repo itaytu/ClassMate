@@ -243,7 +243,7 @@ public class Register extends AppCompatActivity {
             student.put("full_name", fullName);
             student.put("email", email);
             student.put("phone", phone);*/
-            Student student = new Student(fullName, email, phone);
+            Student student = new Student(fullName, email, phone,uuid);
             documentReferenceStudents.set(student).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {

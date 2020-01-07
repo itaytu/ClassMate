@@ -2,26 +2,31 @@ package com.example.classmate.Models;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Student {
+public class Student implements Serializable {
 
     private String fullName;
     private String email;
     private String phone;
     private String classroom;
+    private String userID;
 
     private ArrayList<String> skills;
     private ArrayList<String> weaknesses;
+    private ArrayList<Lesson> myLessons;
 
 
-    public Student(String fullName, String email, String phone) {
+    public Student(String fullName, String email, String phone,String userID) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.classroom="";
         skills = new ArrayList<>();
         weaknesses = new ArrayList<>();
+        this.userID=userID;
+        this.myLessons=new ArrayList<>();
     }
 
     public Student(Student student) {
@@ -88,9 +93,14 @@ public class Student {
         this.phone = phone;
     }
 
+    public String getUserID(){return  userID;}
+
+    public ArrayList<Lesson> getMyLessons(){return this.myLessons;}
+
     @NonNull
     @Override
     public String toString() {
         return this.getFullName()+" , " + this.getSkills()+" , " + this.getWeaknesses();
     }
+
 }

@@ -2,8 +2,8 @@ package com.example.classmate.Student_Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -54,7 +54,7 @@ public class Algorithm extends AppCompatActivity {
                 firestore.collection("classes").document(myClass).addSnapshotListener(Algorithm.this,new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<Student> students = new ArrayList<>();
+                        final ArrayList<Student> students = new ArrayList<>();
                         List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) documentSnapshot.get("studentsList");
                         for (HashMap<String, Object> map:list){
                             String studentEmail = (String) map.get("email");
@@ -69,7 +69,8 @@ public class Algorithm extends AppCompatActivity {
                                     String name = (String) map.get("fullName");
                                     String email = (String) map.get("email");
                                     String phone = (String) map.get("phone");
-                                    Student student = new Student(name,email,phone);
+                                    String userID = (String) map.get("userID");
+                                    Student student = new Student(name,email,phone,userID);
                                     student.getSkills().addAll(tempMyWeaknesses);
                                     if (tempMySkills != null) {
                                         student.getWeaknesses().addAll(tempMySkills);
@@ -83,7 +84,10 @@ public class Algorithm extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                // TODO move to set lesson activity
+                                Student s=students.get(position);
+                                Intent intent = new Intent(getApplicationContext(), Match.class);
+                                intent.putExtra("st", s);
+                                startActivity(intent);
                             }
                         });
                     }

@@ -87,15 +87,17 @@ public class Teacher_Create_Class extends AppCompatActivity {
                     String fullName;
                     String email;
                     String phone;
+                    String userID;
                     List<String> skillsList;
                     List<String> improveList;
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                         phone=documentSnapshot.getString("phone");
                         fullName=documentSnapshot.getString("fullName");
                         email=documentSnapshot.getString("email");
+                        userID=documentSnapshot.getString("userID");
                         skillsList = (List<String>) documentSnapshot.get("skills");
                         improveList = (List<String>) documentSnapshot.get("weaknesses");
-                        Student student = new Student(fullName,email,phone);
+                        Student student = new Student(fullName,email,phone,userID);
                         student.getSkills().addAll(skillsList);
                         student.getWeaknesses().addAll(improveList);
                         Pair<Student,String> pair =new Pair<>(student,documentSnapshot.getId());

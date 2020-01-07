@@ -85,6 +85,7 @@ public class Teacher_HomePage extends AppCompatActivity {
                                     String fullName;
                                     String email;
                                     String phone;
+                                    String userId;
                                     List<String> skillsList;
                                     List<String> improveList;
                                     List<HashMap<String, Object>> list= (List<HashMap<String, Object>>) queryDocumentSnapshot.get("studentsList");
@@ -95,9 +96,10 @@ public class Teacher_HomePage extends AppCompatActivity {
                                         fullName=(String) map.get("fullName");
                                         email=(String) map.get("email");
                                         phone=(String) map.get("phone");
+                                        userId=(String) map.get("userId");
                                         skillsList = (List<String>) map.get("skills");
                                         improveList = (List<String>) map.get("weaknesses");
-                                        Student student = new Student(fullName,email,phone);
+                                        Student student = new Student(fullName,email,phone,userId);
                                         student.getSkills().addAll(skillsList);
                                         student.getWeaknesses().addAll(improveList);
                                         students.add(student);
