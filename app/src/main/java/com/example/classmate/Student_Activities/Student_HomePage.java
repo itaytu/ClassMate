@@ -60,6 +60,8 @@ public class Student_HomePage extends AppCompatActivity {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Log.d("PROFILE", "here");
+                if(documentSnapshot == null)
+                    return;
                 phone.append(documentSnapshot.getString("phone"));
                 fullName.append(documentSnapshot.getString("fullName"));
                 email.append(documentSnapshot.getString("email"));
@@ -97,7 +99,7 @@ public class Student_HomePage extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         fAuth.signOut();
-        Intent intent = new Intent(getApplicationContext(), Login.class);
+        Intent intent = new Intent(this.getApplicationContext(), Login.class);
         startActivity(intent);
     }
 

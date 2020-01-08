@@ -16,6 +16,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.classmate.Connecting.Login;
 import com.example.classmate.Models.Request;
 import com.example.classmate.Models.Student;
 import com.example.classmate.R;
@@ -185,12 +186,15 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
             docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
             docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
-            Intent intent = new Intent(getApplicationContext(), Student_HomePage.class);
+            Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
             startActivity(intent);
         }
     }
 
-
-
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
+        startActivity(intent);
+    }
 }
 
