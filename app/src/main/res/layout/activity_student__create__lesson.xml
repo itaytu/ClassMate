@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Student_Activities.Student_Create_Lesson">
 
+
     <RelativeLayout
         android:id="@+id/relativeLayout2"
         android:layout_width="387dp"
@@ -14,8 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.16000003">
+        app:layout_constraintTop_toBottomOf="@+id/textview_request_title"
+        app:layout_constraintVertical_bias="0.117">
 
         <EditText
             android:id="@+id/in_date"
@@ -51,7 +52,6 @@
             android:text="SELECT TIME" />
     </RelativeLayout>
 
-
     <Spinner
         android:id="@+id/lessons_spinner"
         android:layout_width="128dp"
@@ -74,4 +74,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
         app:layout_constraintVertical_bias="0.25" />
+
+    <Button
+        android:id="@+id/button_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginBottom="212dp"
+        android:text="Submit Request"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lessons_spinner" />
+
+    <TextView
+        android:id="@+id/textview_request_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="177dp"
+        android:text="New Lesson Request"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

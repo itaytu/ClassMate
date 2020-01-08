@@ -15,14 +15,20 @@ public class Student implements Serializable {
     private ArrayList<String> skills;
     private ArrayList<String> weaknesses;
 
+    private ArrayList<String> myRequests;
+    private ArrayList<String> myLessons;
+
 
     public Student(String fullName, String email, String phone) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.classroom="";
+
         skills = new ArrayList<>();
         weaknesses = new ArrayList<>();
+        myLessons = new ArrayList<>();
+        myRequests = new ArrayList<>();
     }
 
     public Student(Student student) {
@@ -93,5 +99,21 @@ public class Student implements Serializable {
     @Override
     public String toString() {
         return this.getFullName()+" , " + this.getSkills()+" , " + this.getWeaknesses();
+    }
+
+    public ArrayList<String> getMyLessons() {
+        return myLessons;
+    }
+
+    public void setMyLessons(ArrayList<String> myLessons) {
+        this.myLessons = myLessons;
+    }
+
+    public ArrayList<String> getMyRequests() {
+        return myRequests;
+    }
+
+    public void setMyRequests(ArrayList<String> myRequests) {
+        this.myRequests = myRequests;
     }
 }

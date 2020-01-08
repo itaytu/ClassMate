@@ -2,6 +2,7 @@ package com.example.classmate.Student_Activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.classmate.Models.Lesson;
+import com.example.classmate.Models.Request;
 import com.example.classmate.Models.Student;
 import com.example.classmate.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,28 +26,35 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 public class Student_Create_Lesson extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btnDatePicker, btnTimePicker;
+    private Button btnDatePicker, btnTimePicker, btnSubmit;
     private EditText txtDate, txtTime;
-    private int mYear, mMonth, mDay, mHour, mMinute;
+    private Spinner spinner;
 
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
 
-    private String first_student_id;
-    private String second_student_id;
-
-    private Spinner spinner;
+    private String requesting_student_id;
+    private String responding_student_id;
+    private String lesson_subject;
+    private Date lesson_date;
 
 
     @Override
@@ -54,19 +62,23 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student__create__lesson);
 
-        btnDatePicker=findViewById(R.id.btn_date);
-        btnTimePicker=findViewById(R.id.btn_time);
-        txtDate=findViewById(R.id.in_date);
-        txtTime=findViewById(R.id.in_time);
+        btnDatePicker = findViewById(R.id.btn_date);
+        btnTimePicker = findViewById(R.id.btn_time);
+        btnSubmit = findViewById(R.id.button_submit);
+        txtDate = findViewById(R.id.in_date);
+        txtTime = findViewById(R.id.in_time);
 
         btnDatePicker.setOnClickListener(this);
         btnTimePicker.setOnClickListener(this);
+        btnSubmit.setOnClickListener(this);
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        first_student_id = fAuth.getCurrentUser().getUid();
+        requesting_student_id = fAuth.getCurrentUser().getUid();
 
         final Student second_student = (Student) getIntent().getSerializableExtra("st");
+
+
 
         CollectionReference collectionReference = fStore.collection("students");
         final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
@@ -76,29 +88,9 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
-                        second_student_id = documentSnapshot.getId();
+                        responding_student_id = documentSnapshot.getId();
                         Log.d("SECOND STUDENT ID: " , documentSnapshot.getId());
                     }
-                    DocumentReference docFirst = fStore.collection("students").document(first_student_id);
-                    DocumentReference docSec = fStore.collection("students").document(second_student_id);
-
-                    final Lesson lesson = new Lesson(first_student_id, second_student_id);
-                    final DocumentReference documentReferenceUsers = fStore.collection("lessons").document();
-
-                    documentReferenceUsers.set(lesson).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("Lesson_scheduled", "Lesson scheduled successfully ");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Lesson_scheduled", "Lesson creation failed");
-                        }
-                    });
-
-                    docFirst.update("myLessons", documentReferenceUsers.getId());
-                    docSec.update("myLessons", documentReferenceUsers.getId());
 
                     spinner = findViewById(R.id.lessons_spinner);
 
@@ -113,12 +105,13 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                     Log.d("ERROR NO STUDENT: ", task.getException().toString());
             }
         });
-
-
     }
+
 
     @Override
     public void onClick(View v) {
+        int mYear = 0, mMonth = 0, mDay = 0, mHour = 0, mMinute = 0;
+
         if (v == btnDatePicker) {
 
             // Get Current Date
@@ -126,7 +119,6 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
             mYear = c.get(Calendar.YEAR);
             mMonth = c.get(Calendar.MONTH);
             mDay = c.get(Calendar.DAY_OF_MONTH);
-
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                     new DatePickerDialog.OnDateSetListener() {
@@ -161,6 +153,44 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                     }, mHour, mMinute, false);
             timePickerDialog.show();
         }
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, mYear);
+        cal.set(Calendar.MONTH, mMonth);
+        cal.set(Calendar.DAY_OF_MONTH, mDay);
+        cal.set(Calendar.HOUR_OF_DAY, mHour);
+        cal.set(Calendar.MINUTE, mMinute);
+        lesson_date = cal.getTime();
+
+        if (v == btnSubmit) {
+            DocumentReference docFirst = fStore.collection("students").document(requesting_student_id);
+            DocumentReference docSec = fStore.collection("students").document(responding_student_id);
+
+            lesson_subject = spinner.getSelectedItem().toString();
+            final Request request = new Request(requesting_student_id, responding_student_id, lesson_subject, lesson_date);
+            final DocumentReference documentReferenceRequests = fStore.collection("requests").document();
+
+            documentReferenceRequests.set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("REQUEST: ", "Request created successfully ");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("REQUEST: ", "Request creation failed");
+                }
+            });
+
+            docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
+            docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
+
+            Intent intent = new Intent(getApplicationContext(), Student_HomePage.class);
+            startActivity(intent);
+        }
     }
+
+
+
 }
 

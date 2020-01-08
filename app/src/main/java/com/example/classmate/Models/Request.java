@@ -8,15 +8,15 @@ public class Request implements Serializable {
 
     private boolean isAccepted;
     private String lesson_subject;
-    private String first_student;
-    private String second_student;
+    private String requesting_student;
+    private String responding_student;
 
     private Date lesson_date;
 
 
     public Request(String first_student, String second_student, String lesson_subject, Date lesson_date){
-        this.first_student = first_student;
-        this.second_student = second_student;
+        this.requesting_student = first_student;
+        this.responding_student = second_student;
         this.lesson_subject = lesson_subject;
 
         this.lesson_date = lesson_date;
@@ -30,20 +30,20 @@ public class Request implements Serializable {
         this.lesson_date = lesson_date;
     }
 
-    public String getSecond_student() {
-        return second_student;
+    public String getResponding_student() {
+        return responding_student;
     }
 
-    public void setSecond_student(String second_student) {
-        this.second_student = second_student;
+    public void setResponding_student(String responding_student) {
+        this.responding_student = responding_student;
     }
 
-    public String getFirst_student() {
-        return first_student;
+    public String getRequesting_student() {
+        return requesting_student;
     }
 
-    public void setFirst_student(String first_student) {
-        this.first_student = first_student;
+    public void setRequesting_student(String requesting_student) {
+        this.requesting_student = requesting_student;
     }
 
     public String getLesson_subject() {
