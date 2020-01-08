@@ -94,8 +94,6 @@ public class  MyExpandableListAdapter extends BaseExpandableListAdapter {
         join ="Weaknesses: "+join;
         weaknesses.setText(join);
 
-
-
         return convertView;
     }
 
