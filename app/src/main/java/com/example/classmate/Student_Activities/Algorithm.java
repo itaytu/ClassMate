@@ -2,6 +2,7 @@ package com.example.classmate.Student_Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,9 @@ public class Algorithm extends AppCompatActivity {
     private List<String> mySkills = new ArrayList<>();
     private String myClass;
     private String myEmail;
+    private ArrayList<Student> students;
+
+
     private ListView listView;
 
     @Override
@@ -54,7 +58,7 @@ public class Algorithm extends AppCompatActivity {
                 firestore.collection("classes").document(myClass).addSnapshotListener(Algorithm.this,new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        ArrayList<Student> students = new ArrayList<>();
+                        students = new ArrayList<>();
                         List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) documentSnapshot.get("studentsList");
                         for (HashMap<String, Object> map:list){
                             String studentEmail = (String) map.get("email");
@@ -83,7 +87,10 @@ public class Algorithm extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                // TODO move to set lesson activity
+                                Student s = students.get(position);
+                                Intent intent = new Intent(getApplicationContext(), Student_Create_Lesson.class);
+                                intent.putExtra("st", s);
+                                startActivity(intent);
                             }
                         });
                     }
