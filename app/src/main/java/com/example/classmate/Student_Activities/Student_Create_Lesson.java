@@ -16,7 +16,6 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.classmate.Connecting.Login;
 import com.example.classmate.Models.Request;
 import com.example.classmate.Models.Student;
 import com.example.classmate.R;
@@ -27,21 +26,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-
-import javax.annotation.Nullable;
 
 public class Student_Create_Lesson extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +51,8 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
     private String responding_student_id;
     private String lesson_subject;
     private Date lesson_date;
+
+    private int mYear = 0, mMonth = 0, mDay = 0, mHour = 0, mMinute = 0;
 
 
     @Override
@@ -111,7 +108,6 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        int mYear = 0, mMonth = 0, mDay = 0, mHour = 0, mMinute = 0;
 
         if (v == btnDatePicker) {
 
@@ -125,13 +121,22 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                     new DatePickerDialog.OnDateSetListener() {
 
                         @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-
-                            txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            mYear = year;
+                            mMonth = monthOfYear;
+                            mDay = dayOfMonth;
+                            String dateString = dayOfMonth + " " + monthOfYear + " " + year;
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+                            Date date = new Date();
+                            try {
+                                date = sdf.parse(dateString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            txtDate.setText(sdf.format(Objects.requireNonNull(date)));
                         }
                     }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show();
         }
         if (v == btnTimePicker) {
@@ -144,12 +149,20 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
             // Launch Time Picker Dialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                     new TimePickerDialog.OnTimeSetListener() {
-
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-
-                            txtTime.setText(hourOfDay + ":" + minute);
+                            mHour = hourOfDay;
+                            mMinute = minute;
+                            String dateString = hourOfDay + " " + minute;
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                            Date date = new Date();
+                            try {
+                                date = dateFormat.parse(dateString);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            txtTime.setText(dateFormat.format(Objects.requireNonNull(date)));
                         }
                     }, mHour, mMinute, false);
             timePickerDialog.show();
@@ -164,30 +177,35 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
         lesson_date = cal.getTime();
 
         if (v == btnSubmit) {
-            DocumentReference docFirst = fStore.collection("students").document(requesting_student_id);
-            DocumentReference docSec = fStore.collection("students").document(responding_student_id);
+            if(txtDate.getText().toString().matches("") || txtTime.getText().toString().matches("")){
+                btnSubmit.setError("Please choose date and time");
+            }
+            else {
+                DocumentReference docFirst = fStore.collection("students").document(requesting_student_id);
+                DocumentReference docSec = fStore.collection("students").document(responding_student_id);
 
-            lesson_subject = spinner.getSelectedItem().toString();
-            final Request request = new Request(requesting_student_id, responding_student_id, lesson_subject, lesson_date);
-            final DocumentReference documentReferenceRequests = fStore.collection("requests").document();
+                lesson_subject = spinner.getSelectedItem().toString();
+                final Request request = new Request(requesting_student_id, responding_student_id, lesson_subject, lesson_date);
+                final DocumentReference documentReferenceRequests = fStore.collection("requests").document();
 
-            documentReferenceRequests.set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.d("REQUEST: ", "Request created successfully ");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("REQUEST: ", "Request creation failed");
-                }
-            });
+                documentReferenceRequests.set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("REQUEST: ", "Request created successfully ");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("REQUEST: ", "Request creation failed");
+                    }
+                });
 
-            docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
-            docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
+                docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
+                docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
-            Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
-            startActivity(intent);
+                Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
+                startActivity(intent);
+            }
         }
     }
 
