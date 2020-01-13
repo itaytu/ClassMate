@@ -42,6 +42,33 @@ public class Student_HomePage extends AppCompatActivity {
 
         viewPager.setAdapter(fragment_adapter);
         viewPager.setCurrentItem(1);
+        botNav.setSelectedItemId(R.id.nav_home);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        botNav.getMenu().findItem(R.id.nav_lessons).setChecked(true);
+                        break;
+                    case 1:
+                        botNav.getMenu().findItem(R.id.nav_home).setChecked(true);
+                        break;
+                    case 2:
+                        botNav.getMenu().findItem(R.id.nav_requests).setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
@@ -49,24 +76,24 @@ public class Student_HomePage extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            Fragment selectedFragment;
+//            Fragment selectedFragment = new Fragment();
 
             switch (menuItem.getItemId()){
 
                 case R.id.nav_lessons:
-                    selectedFragment = new lessons();
+                    viewPager.setCurrentItem(0);
                     break;
 
                 case R.id.nav_requests:
-                    selectedFragment = new requests();
+                    viewPager.setCurrentItem(2);
                     break;
 
-                default:
-                    selectedFragment = new home_page();
+                case R.id.nav_home:
+                    viewPager.setCurrentItem(1);
             }
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             return true;
         }
     };
+
 }
