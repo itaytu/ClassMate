@@ -32,7 +32,7 @@ import java.util.concurrent.Executor;
 
 import javax.annotation.Nullable;
 
-public class Student_Home_Page extends Fragment {
+public class home_page extends Fragment {
     private TextView fullName , email , phone, skills, weaknesses;
     private Button logout , findMatch;
 
@@ -45,7 +45,7 @@ public class Student_Home_Page extends Fragment {
     private List<String> skillsList = new ArrayList<>();
     private List<String> weaknessesList = new ArrayList<>();
 
-    public Student_Home_Page() {
+    public home_page() {
         // Required empty public constructor
     }
 
@@ -54,7 +54,7 @@ public class Student_Home_Page extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_student__home__page,container,false);
+        View v = inflater.inflate(R.layout.fragment_student__home__page, container,false);
         fullName = v.findViewById(R.id.profileName);
         email = v.findViewById(R.id.profileEmail);
         phone = v.findViewById(R.id.profilePhoneNumber);

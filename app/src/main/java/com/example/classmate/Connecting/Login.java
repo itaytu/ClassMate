@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,14 +38,16 @@ import javax.annotation.Nullable;
 public class Login extends AppCompatActivity {
 
     private Button loginButton;
-//    private Button register;
     private TextView register;
-    private EditText emailEditText , passwordEditText ;
-    private boolean pflag = false, eflag = false;
+    private EditText emailEditText , passwordEditText;
+
     private FirebaseAuth mAuth;
-    private static final String TAG = "Login";
     private FirebaseFirestore firestore;
+
+    private static final String TAG = "Login";
     private String userId;
+
+    private boolean pflag = false, eflag = false;
     private Boolean isTeacher;
 
     @Override
@@ -54,17 +55,13 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         loginButton = findViewById(R.id.loginButton);
         register=findViewById(R.id.register_textView);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
-        // [START initialize_auth]
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
-        // [END initialize_auth]
 
         InitListeners();
         Login();
@@ -85,7 +82,7 @@ public class Login extends AppCompatActivity {
                         emailEditText.setError("Invalid Email");
                         ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
                         ViewCompat.setBackgroundTintList(emailEditText, colorStateList);
-//                        eflag = false;
+                        eflag = false;
                     }
                     else {
                         ColorStateList colorStateList = ColorStateList.valueOf(0xFF1C1CF0);
@@ -109,7 +106,7 @@ public class Login extends AppCompatActivity {
                     passwordEditText.setError("Please enter a password at least 8 characters long");
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFFD3212D);
                     ViewCompat.setBackgroundTintList(passwordEditText, colorStateList);
-//                    pflag = false;
+                    pflag = false;
                 }
                 else {
                     ColorStateList colorStateList = ColorStateList.valueOf(0xFF1C1CF0);
@@ -134,7 +131,7 @@ public class Login extends AppCompatActivity {
         return true;
     }
 
-    private void checkEMAILpassword(){
+    private void checkEmailAndPassword(){
         Log.d(TAG, "into the func");
         mAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -142,9 +139,9 @@ public class Login extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "into the func");
                         if (task.isSuccessful()) {
-                            eflag=pflag=true;
+                            //eflag=pflag=true;
                             // Sign in success, update UI with the signed-in User's information
-                            userId = mAuth.getCurrentUser().getUid();
+                            userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
                             DocumentReference documentReference =firestore.collection("users").document(userId);
                             documentReference.addSnapshotListener(Login.this,new EventListener<DocumentSnapshot>() {
                                 @Override
@@ -155,8 +152,8 @@ public class Login extends AppCompatActivity {
                                     if (isTeacher){
                                         Log.d(TAG, "signInWithEmail:success");
                                          intent = new Intent(getApplicationContext(), Teacher_HomePage.class);
-
-                                    }else{
+                                    }
+                                    else {
                                          intent = new Intent(getApplicationContext(), Student_HomePage.class);
                                     }
                                     startActivity(intent);
@@ -183,7 +180,7 @@ public class Login extends AppCompatActivity {
                 if(eflag&&pflag) {
                     Vibrator vibrator = (Vibrator) Login.this.getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(5000);
-                    checkEMAILpassword();
+                    checkEmailAndPassword();
                 }else{
                     Toast.makeText(Login.this, "Invalid email or password.",
                             Toast.LENGTH_SHORT).show();
