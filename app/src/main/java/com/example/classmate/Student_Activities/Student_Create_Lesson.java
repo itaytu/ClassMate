@@ -76,8 +76,6 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
 
         final Student second_student = (Student) getIntent().getSerializableExtra("st");
 
-
-
         CollectionReference collectionReference = fStore.collection("students");
         final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
 
@@ -104,8 +102,6 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
             }
         });
     }
-
-
     @Override
     public void onClick(View v) {
 
@@ -201,6 +197,7 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                 });
 
                 docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
+                docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
                 Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
                 startActivity(intent);

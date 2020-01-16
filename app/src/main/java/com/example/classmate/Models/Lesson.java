@@ -6,13 +6,13 @@ public class Lesson {
 
     private String first_student;
     private String second_student;
-
+    private String subject;
     private Date lesson_date;
 
-    public Lesson(String first_student, String second_student, Date lesson_date){
+    public Lesson(String first_student, String second_student,String subject, Date lesson_date){
         this.first_student = first_student;
         this.second_student = second_student;
-
+        this.subject = subject;
         this.lesson_date = lesson_date;
     }
 
@@ -40,5 +40,13 @@ public class Lesson {
 
     public void setLesson_date(Date lesson_date) {
         this.lesson_date = lesson_date;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 }
