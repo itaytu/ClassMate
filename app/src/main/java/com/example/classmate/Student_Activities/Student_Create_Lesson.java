@@ -200,7 +200,6 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                     }
                 });
 
-                docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
                 docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
                 Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);

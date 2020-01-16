@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Student_Activities.Fragments.Student_Home_Page">
+    tools:context=".Student_Activities.Fragments.home_page">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,9 +15,11 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/annie_use_your_telescope"
             android:gravity="start"
             android:text="Your Profile"
-            android:textSize="30sp"
+            android:textColor="#3F51B5"
+            android:textSize="36sp"
             android:textStyle="normal|bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +30,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="418dp"
-            android:layout_height="223dp"
+            android:layout_height="260dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +42,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="45dp"
-                android:text="Your Name : " />
+                android:fontFamily="@font/annie_use_your_telescope"
+                android:text="Your Name : "
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/profileEmail"
@@ -48,7 +52,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Your Email Address : " />
+                android:fontFamily="@font/annie_use_your_telescope"
+                android:text="Your Email Address : "
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/profilePhoneNumber"
@@ -56,7 +62,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Phone Number : " />
+                android:fontFamily="@font/annie_use_your_telescope"
+                android:text="Phone Number : "
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/skills"
@@ -64,7 +72,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Skills : " />
+                android:fontFamily="@font/annie_use_your_telescope"
+                android:text="Skills : "
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/improves"
@@ -72,7 +82,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="Improve : " />
+                android:fontFamily="@font/annie_use_your_telescope"
+                android:text="Improve : "
+                android:textSize="18sp" />
         </LinearLayout>
 
         <Button
@@ -80,6 +92,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LOGOUT"
+            android:background="@drawable/custom_button"
+            android:fontFamily="@font/annie_use_your_telescope"
+            android:textAllCaps="false"
+            android:textColor="#3F51B5"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +108,11 @@
             android:layout_width="178dp"
             android:layout_height="54dp"
             android:text="Find Match"
+            android:background="@drawable/custom_button"
+            android:fontFamily="@font/annie_use_your_telescope"
+            android:textAllCaps="false"
+            android:textColor="#3F51B5"
+            android:textSize="25sp"
             app:layout_constraintBottom_toTopOf="@+id/logout_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
