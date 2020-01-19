@@ -7,8 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.classmate.Models.Lesson;
 import com.example.classmate.Models.Request;
@@ -39,7 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -144,7 +140,7 @@ public class requests extends Fragment {
         subject.append("Subject : "+ request.getLesson_subject());
         date.append("Date : "+request.getLesson_date().toString());
         Log.d("req_uuid", "showDialog: "+requestUuid);
-        Button accept = dialog.findViewById(R.id.accapt);
+        Button accept = dialog.findViewById(R.id.accept_button);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,7 +171,7 @@ public class requests extends Fragment {
             }
         });
 
-        Button declined = dialog.findViewById(R.id.declined);
+        Button declined = dialog.findViewById(R.id.decline_button);
         //TODO need to finish declined button
         declined.setOnClickListener(new View.OnClickListener() {
             @Override

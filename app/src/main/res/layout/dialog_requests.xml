@@ -7,26 +7,26 @@
     android:orientation="vertical" >
 
     <Button
-        android:id="@+id/declined"
+        android:id="@+id/decline_button"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:background="@android:color/holo_red_dark"
-        android:text="declined"
-        android:textColor="#FFFFFF"
         android:drawableLeft="@drawable/x"
+        android:text="Decline"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/accapt"
+        app:layout_constraintTop_toBottomOf="@+id/accept_button"
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/accapt"
+        android:id="@+id/accept_button"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@android:color/holo_green_light"
-        android:text="Accapt"
         android:drawableLeft="@drawable/accept"
+        android:text="Accept"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
