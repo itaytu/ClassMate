@@ -133,10 +133,10 @@ public class requests extends Fragment {
         final Dialog dialog = new Dialog(activity);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_requests);
-        TextView fullname = dialog.findViewById(R.id.fullName);
+        TextView fullName = dialog.findViewById(R.id.fullName);
         TextView subject  = dialog.findViewById(R.id.subject);
         TextView date = dialog.findViewById(R.id.date);
-        fullname.append("Full-Name : "+ request.getRequesting_student());
+        fullName.append("Full-Name : "+ request.getRequesting_student());
         subject.append("Subject : "+ request.getLesson_subject());
         date.append("Date : "+request.getLesson_date().toString());
         Log.d("req_uuid", "showDialog: "+requestUuid);
@@ -172,8 +172,31 @@ public class requests extends Fragment {
         });
 
         Button declined = dialog.findViewById(R.id.decline_button);
-        //TODO need to finish declined button
         declined.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firestore.collection("requests").document(requestUuid)
+                        .delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("Delete requests", "onComplete: requests delete successful");
+                        DocumentReference reference = firestore.collection("students").document(uuid);
+                        reference.update("myRequests",FieldValue.arrayRemove(requestUuid));
+                        ((Student_HomePage)getActivity()).setCurrentItem(1);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Delete requests fail", "onFailure: "+e.toString());
+                    }
+                });
+                dialog.dismiss();
+            }
+
+
+        });
+        Button cancel = dialog.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
