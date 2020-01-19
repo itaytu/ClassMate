@@ -72,36 +72,37 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        requesting_student_id = fAuth.getCurrentUser().getUid();
+        if (fAuth.getCurrentUser().getUid() != null) {
+            requesting_student_id = fAuth.getCurrentUser().getUid();
 
-        final Student second_student = (Student) getIntent().getSerializableExtra("st");
+            final Student second_student = (Student) getIntent().getSerializableExtra("st");
 
-        CollectionReference collectionReference = fStore.collection("students");
-        final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
+            CollectionReference collectionReference = fStore.collection("students");
+            final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
 
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
-                        responding_student_id = documentSnapshot.getId();
-                        Log.d("SECOND STUDENT ID: " , documentSnapshot.getId());
-                    }
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                            responding_student_id = documentSnapshot.getId();
+                            Log.d("SECOND STUDENT ID: ", documentSnapshot.getId());
+                        }
 
-                    spinner = findViewById(R.id.lessons_spinner);
+                        spinner = findViewById(R.id.lessons_spinner);
 
-                    ArrayAdapter<String> lessons_adapter = new ArrayAdapter<>(Student_Create_Lesson.this, android.R.layout.simple_spinner_item, second_student.getSkills());
-                    lessons_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ArrayAdapter<String> lessons_adapter = new ArrayAdapter<>(Student_Create_Lesson.this, android.R.layout.simple_spinner_item, second_student.getSkills());
+                        lessons_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                    spinner.setAdapter(lessons_adapter);
+                        spinner.setAdapter(lessons_adapter);
 
+                    } else
+                        Log.d("ERROR NO STUDENT: ", task.getException().toString());
                 }
-
-                else
-                    Log.d("ERROR NO STUDENT: ", task.getException().toString());
-            }
-        });
+            });
+        }
     }
+    //TODO now work
     @Override
     public void onClick(View v) {
 
@@ -197,12 +198,12 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                 });
 
                 docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
-                docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
                 Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
                 startActivity(intent);
             }
         }
+
     }
 
     @Override

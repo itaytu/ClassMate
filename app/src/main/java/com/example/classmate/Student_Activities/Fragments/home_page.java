@@ -65,7 +65,9 @@ public class home_page extends Fragment {
         logout= v.findViewById(R.id.logout_button);
 
         findMatch = v.findViewById(R.id.findMatch);
-        uid = fAuth.getCurrentUser().getUid();
+        if (fAuth.getCurrentUser().getUid()!= null) {
+            uid = fAuth.getCurrentUser().getUid();
+        }
         DocumentReference documentReference = fStore.collection("students").document(uid);
         documentReference.addSnapshotListener(getActivity(),new EventListener<DocumentSnapshot>() {
             @Override

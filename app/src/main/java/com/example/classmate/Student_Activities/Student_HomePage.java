@@ -46,6 +46,9 @@ public class Student_HomePage extends AppCompatActivity {
         botNav.setSelectedItemId(R.id.nav_home);
     }
 
+    public void setCurrentItem(int item) {
+        viewPager.setCurrentItem(item);
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override

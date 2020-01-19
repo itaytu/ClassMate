@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/annie_use_your_telescope"
         android:text="Welcome to Classmate"
-        android:textSize="36sp"
+        android:textColor="#3F51B5"
 
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.110000014" />
+        app:layout_constraintVertical_bias="0.17000002" />
 
     <TextView
         android:id="@+id/textView3"
@@ -27,6 +28,7 @@
         android:layout_marginTop="11dp"
         android:fontFamily="@font/annie_use_your_telescope"
         android:text="Create New Account"
+        android:textColor="#3F51B5"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +45,7 @@
         android:inputType="textPersonName"
         android:padding="10dp"
         android:textSize="13sp"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
@@ -55,12 +58,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/email"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/password_register_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,13 +75,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/password"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:padding="10dp"
         android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/phone_textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_register_textView" />
@@ -87,13 +92,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/phone"
         android:ems="10"
         android:hint="Phone"
         android:inputType="phone"
         android:padding="10dp"
         android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/userType_radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -173,6 +179,16 @@
         app:layout_constraintTop_toBottomOf="@+id/go_to_login_button"
         app:layout_constraintVertical_bias="0.62"
         tools:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="149dp"
+        android:layout_height="93dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/education" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
