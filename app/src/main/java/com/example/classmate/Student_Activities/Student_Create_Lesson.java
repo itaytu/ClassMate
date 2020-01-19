@@ -122,11 +122,14 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                             mYear = year;
                             mMonth = monthOfYear;
                             mDay = dayOfMonth;
-                            String dateString = dayOfMonth + " " + monthOfYear + " " + year;
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+                            String monthString = monthOfYear < 10 ? "0" + (monthOfYear + 1) : String.valueOf(monthOfYear + 1);
+                            String dateString = dayOfMonth + "/" + monthString + "/" + year;
+                            Log.d("DATESTRING: ", dateString);
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                             Date date = new Date();
                             try {
                                 date = sdf.parse(dateString);
+                                Log.d("IN TRY: ", sdf.format(date));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -151,7 +154,7 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                                               int minute) {
                             mHour = hourOfDay;
                             mMinute = minute;
-                            String dateString = hourOfDay + " " + minute;
+                            String dateString = hourOfDay + ":" + minute + ":00";
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                             Date date = new Date();
                             try {
