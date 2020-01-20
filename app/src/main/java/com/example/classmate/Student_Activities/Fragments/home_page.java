@@ -65,7 +65,9 @@ public class home_page extends Fragment {
         logout= v.findViewById(R.id.logout_button);
 
         findMatch = v.findViewById(R.id.findMatch);
-        uid = fAuth.getCurrentUser().getUid();
+        if (fAuth.getCurrentUser().getUid()!= null) {
+            uid = fAuth.getCurrentUser().getUid();
+        }
         DocumentReference documentReference = fStore.collection("students").document(uid);
         documentReference.addSnapshotListener(getActivity(),new EventListener<DocumentSnapshot>() {
             @Override
@@ -73,16 +75,16 @@ public class home_page extends Fragment {
                 Log.d("PROFILE", "here");
                 if(documentSnapshot == null)
                     return;
-                phone.append(documentSnapshot.getString("phone"));
-                fullName.append(documentSnapshot.getString("fullName"));
-                email.append(documentSnapshot.getString("email"));
+                phone.setText("Phone : "+documentSnapshot.getString("phone"));
+                fullName.setText("Full-Name : "+documentSnapshot.getString("fullName"));
+                email.setText("Email : "+documentSnapshot.getString("email"));
                 classroomId = documentSnapshot.getString("classroom");
                 skillsList = (List<String>) documentSnapshot.get("skills");
                 weaknessesList = (List<String>) documentSnapshot.get("weaknesses");
                 String stringSkills = TextUtils.join(", ", skillsList);
                 String stringImproves = TextUtils.join(", ", weaknessesList);
-                skills.append(stringSkills);
-                weaknesses.append(stringImproves);
+                skills.setText("Skills : "+stringSkills);
+                weaknesses.setText("Weaknesses : "+stringImproves);
             }
 
         });

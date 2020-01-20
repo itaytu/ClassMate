@@ -29,6 +29,7 @@
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
+        android:drawableLeft="@drawable/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +45,7 @@
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
+        android:drawableLeft="@drawable/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
@@ -72,6 +74,7 @@
         android:layout_marginTop="44dp"
         android:fontFamily="@font/annie_use_your_telescope"
         android:text="Welcome back!"
+        android:textColor="#3F51B5"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/decline_button"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@android:color/holo_red_dark"
+        android:drawableLeft="@drawable/x"
+        android:text="Decline"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accept_button"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/accept_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@android:color/holo_green_light"
+        android:drawableLeft="@drawable/accept"
+        android:text="Accept"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.0" />
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#3F51B5"
+        android:text="@android:string/cancel"
+        android:textColor="#FDF7F7"
+        android:drawableLeft="@drawable/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decline_button"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="358dp"
+        android:layout_height="110dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/fullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="@font/annie_use_your_telescope"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="@font/annie_use_your_telescope"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="@font/annie_use_your_telescope"
+            android:textSize="18sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

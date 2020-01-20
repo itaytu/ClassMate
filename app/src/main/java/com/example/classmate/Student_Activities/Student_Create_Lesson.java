@@ -72,40 +72,37 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        requesting_student_id = fAuth.getCurrentUser().getUid();
+        if (fAuth.getCurrentUser().getUid() != null) {
+            requesting_student_id = fAuth.getCurrentUser().getUid();
 
-        final Student second_student = (Student) getIntent().getSerializableExtra("st");
+            final Student second_student = (Student) getIntent().getSerializableExtra("st");
 
+            CollectionReference collectionReference = fStore.collection("students");
+            final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
 
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                            responding_student_id = documentSnapshot.getId();
+                            Log.d("SECOND STUDENT ID: ", documentSnapshot.getId());
+                        }
 
-        CollectionReference collectionReference = fStore.collection("students");
-        final Query query = collectionReference.whereEqualTo("email", Objects.requireNonNull(second_student).getEmail());
+                        spinner = findViewById(R.id.lessons_spinner);
 
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())){
-                        responding_student_id = documentSnapshot.getId();
-                        Log.d("SECOND STUDENT ID: " , documentSnapshot.getId());
-                    }
+                        ArrayAdapter<String> lessons_adapter = new ArrayAdapter<>(Student_Create_Lesson.this, android.R.layout.simple_spinner_item, second_student.getSkills());
+                        lessons_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                    spinner = findViewById(R.id.lessons_spinner);
+                        spinner.setAdapter(lessons_adapter);
 
-                    ArrayAdapter<String> lessons_adapter = new ArrayAdapter<>(Student_Create_Lesson.this, android.R.layout.simple_spinner_item, second_student.getSkills());
-                    lessons_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    spinner.setAdapter(lessons_adapter);
-
+                    } else
+                        Log.d("ERROR NO STUDENT: ", task.getException().toString());
                 }
-
-                else
-                    Log.d("ERROR NO STUDENT: ", task.getException().toString());
-            }
-        });
+            });
+        }
     }
-
-
+    //TODO now work
     @Override
     public void onClick(View v) {
 
@@ -125,11 +122,14 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                             mYear = year;
                             mMonth = monthOfYear;
                             mDay = dayOfMonth;
-                            String dateString = dayOfMonth + " " + monthOfYear + " " + year;
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
+                            String monthString = monthOfYear < 10 ? "0" + (monthOfYear + 1) : String.valueOf(monthOfYear + 1);
+                            String dateString = dayOfMonth + "/" + monthString + "/" + year;
+                            Log.d("DATESTRING: ", dateString);
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                             Date date = new Date();
                             try {
                                 date = sdf.parse(dateString);
+                                Log.d("IN TRY: ", sdf.format(date));
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -154,7 +154,7 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                                               int minute) {
                             mHour = hourOfDay;
                             mMinute = minute;
-                            String dateString = hourOfDay + " " + minute;
+                            String dateString = hourOfDay + ":" + minute + ":00";
                             SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
                             Date date = new Date();
                             try {
@@ -200,13 +200,13 @@ public class Student_Create_Lesson extends AppCompatActivity implements View.OnC
                     }
                 });
 
-                docFirst.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
                 docSec.update("myRequests", FieldValue.arrayUnion(documentReferenceRequests.getId()));
 
                 Intent intent = new Intent(this.getApplicationContext(), Student_HomePage.class);
                 startActivity(intent);
             }
         }
+
     }
 
     @Override
