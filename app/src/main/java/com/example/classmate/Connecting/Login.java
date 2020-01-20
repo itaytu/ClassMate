@@ -179,7 +179,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 if(eflag&&pflag) {
                     Vibrator vibrator = (Vibrator) Login.this.getSystemService(Context.VIBRATOR_SERVICE);
-                    vibrator.vibrate(5000);
+                    vibrator.vibrate(100);
                     checkEmailAndPassword();
                 }else{
                     Toast.makeText(Login.this, "Invalid email or password.",
