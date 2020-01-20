@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -66,7 +67,7 @@ public class lessons extends Fragment {
                     Log.d("lesssons", "onEvent: "+lessons);
                     for (int i = 0; i < lessons.size(); i++) {
                         DocumentReference documentReferenceLessons = firestore.collection("lessons").document(lessons.get(i));
-                        documentReferenceLessons.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+                        documentReferenceLessons.addSnapshotListener(Objects.requireNonNull(getActivity()), new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                 //TODO CHECK IF THE DATE OF LESSON IS EXPIRED

@@ -2,7 +2,6 @@ package com.example.classmate.Student_Activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,11 +33,11 @@ public class Lessons_adapter extends ArrayAdapter<Lesson> {
 
         Lesson lesson = getItem(position);
 
-        teacher.append("Teacher : " + lesson.getTeacher());
-        student.append("Student : " + lesson.getsecond_student());
-        subject.append("Subject : " + lesson.getSubject());
-        String dateString = lesson.getLesson_date();
-        date.append("Date : " + dateString);
+        teacher.setText("Teacher : " + lesson.getTeacher());
+        student.setText("Student : " + lesson.getsecond_student());
+        subject.setText("Subject : " + lesson.getSubject());
+        String dateString = lesson.getLesson_date().toString();
+        date.setText("Date : " + dateString);
 
         return convertView;
     }

@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Student_HomePage extends AppCompatActivity {
 
@@ -80,12 +81,15 @@ public class Student_HomePage extends AppCompatActivity {
             switch (position) {
                 case 0:
                     botNav.getMenu().findItem(R.id.nav_lessons).setChecked(true);
+                    Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                     break;
                 case 1:
                     botNav.getMenu().findItem(R.id.nav_home).setChecked(true);
+                    Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                     break;
                 case 2:
                     botNav.getMenu().findItem(R.id.nav_requests).setChecked(true);
+                    Objects.requireNonNull(viewPager.getAdapter()).notifyDataSetChanged();
                     break;
             }
         }

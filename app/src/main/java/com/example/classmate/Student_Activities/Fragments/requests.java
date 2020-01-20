@@ -36,6 +36,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -63,12 +64,13 @@ public class requests extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_request_lesson, container,false);
         listView = v.findViewById(R.id.listView);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         uuid  = firebaseAuth.getUid();
+
         date = new Date();
         myRequests = new ArrayList<>();
-        requests = new ArrayList<>();
         requests_student_uuid = new ArrayList<>();
 
         final DocumentReference documentReference = firestore.collection("students").document(uuid);
@@ -76,13 +78,15 @@ public class requests extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot != null){
+                    requests = new ArrayList<>();
+
                     myRequests = (List<String>) documentSnapshot.get("myRequests");
                     Log.d("req", "onEvent: " + myRequests);
                     fullName = documentSnapshot.getString("fullName");
 
                     for (int i = 0; i < myRequests.size(); i++) {
                         DocumentReference reference = firestore.collection("requests").document(myRequests.get(i));
-                        reference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+                        reference.addSnapshotListener(Objects.requireNonNull(getActivity()), new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                 if (documentSnapshot != null) {
@@ -90,55 +94,56 @@ public class requests extends Fragment {
                                     subject = documentSnapshot.getString("lesson_subject");
                                     requesting_student = documentSnapshot.getString("requesting_student");
                                     requests_student_uuid.add(requesting_student);
-                                    Log.d("req", "onEvent: " + requesting_student);
+
                                     if (requesting_student != null) {
                                         DocumentReference documentReferenceResponding = firestore.collection("users").document(requesting_student);
                                         documentReferenceResponding.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
                                             @Override
                                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                                 if(documentSnapshot!=null) {
-//                                                  String phone = documentSnapshot.getString("phone");
-//                                                  String email = documentSnapshot.getString("email");
                                                     String name = documentSnapshot.getString("fullName");
                                                     Request request = new Request(name, fullName, subject, date);
                                                     requests.add(request);
                                                     Log.d("req", "onEvent: " + requests);
-                                                    requests_adapter = new Requests_adapter(getActivity(), requests);
+
+                                                    requests_adapter = new Requests_adapter(Objects.requireNonNull(getActivity()), requests);
                                                     listView.setAdapter(requests_adapter);
                                                 }
                                             }
                                         });
                                     }
                                 }
-
                             }
                         });
                     }
                 }
             }
         });
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("requestUuid", "onItemClick: "+myRequests.get(position));
-                Log.d("requests_student_uuid", "onItemClick: "+requests_student_uuid.get(position));
-                showDialog(getActivity(),requests.get(position),myRequests.get(position),requests_student_uuid.get(position));
+                if(requests.isEmpty() || myRequests.isEmpty() || requests_student_uuid.isEmpty()) {
+                    return;
+                }
+                showDialog(getActivity(),requests.get(position),myRequests.get(position),requests_student_uuid.get(position), position);
             }
         });
-
         return v;
     }
 
-    private void showDialog(FragmentActivity activity, final Request request, final String requestUuid, final String requests_student_uuid) {
+    private void showDialog(FragmentActivity activity, final Request request, final String requestUuid, final String requests_student_uuid, final int position) {
         final Dialog dialog = new Dialog(activity);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_requests);
+
         TextView fullName = dialog.findViewById(R.id.fullName);
         TextView subject  = dialog.findViewById(R.id.subject);
         TextView date = dialog.findViewById(R.id.date);
-        fullName.append("Full-Name : "+ request.getRequesting_student());
-        subject.append("Subject : "+ request.getLesson_subject());
-        date.append("Date : "+request.getLesson_date().toString());
+        fullName.setText("Full-Name : "+ request.getRequesting_student());
+        subject.setText("Subject : "+ request.getLesson_subject());
+        date.setText("Date : "+request.getLesson_date().toString());
         Log.d("req_uuid", "showDialog: "+requestUuid);
         Button accept = dialog.findViewById(R.id.accept_button);
         accept.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +155,8 @@ public class requests extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d("Delete requests", "onComplete: requests delete successful");
                         //need to add toast
+                        requests_adapter.getRequests().remove(position);
+                        requests_adapter.notifyDataSetChanged();
                         DocumentReference reference = firestore.collection("students").document(uuid);
                         reference.update("myRequests",FieldValue.arrayRemove(requestUuid));
                         DocumentReference documentReference = firestore.collection("lessons").document();
@@ -159,7 +166,7 @@ public class requests extends Fragment {
                         reference.update("myLessons",FieldValue.arrayUnion(documentReference.getId()));
                         //update the second student
                         firestore.collection("students").document(requests_student_uuid).update("myLessons",FieldValue.arrayUnion(documentReference.getId()));
-                        ((Student_HomePage)getActivity()).setCurrentItem(0);
+                        ((Student_HomePage) Objects.requireNonNull(getActivity())).setCurrentItem(0);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -180,9 +187,11 @@ public class requests extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Log.d("Delete requests", "onComplete: requests delete successful");
+                        requests_adapter.getRequests().remove(position);
+                        requests_adapter.notifyDataSetChanged();
                         DocumentReference reference = firestore.collection("students").document(uuid);
                         reference.update("myRequests",FieldValue.arrayRemove(requestUuid));
-                        ((Student_HomePage)getActivity()).setCurrentItem(1);
+                        ((Student_HomePage) Objects.requireNonNull(getActivity())).setCurrentItem(2);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
