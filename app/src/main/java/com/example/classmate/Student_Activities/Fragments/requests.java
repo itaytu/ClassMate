@@ -2,6 +2,8 @@ package com.example.classmate.Student_Activities.Fragments;
 
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -137,7 +139,7 @@ public class requests extends Fragment {
         final Dialog dialog = new Dialog(activity);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_requests);
-
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView fullName = dialog.findViewById(R.id.fullName);
         TextView subject  = dialog.findViewById(R.id.subject);
         TextView date = dialog.findViewById(R.id.date);

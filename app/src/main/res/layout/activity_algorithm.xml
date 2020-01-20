@@ -7,24 +7,26 @@
     android:orientation="vertical"
     tools:context=".Student_Activities.Algorithm">
 
-    <TextView
-        android:id="@+id/textView7"
+    <ImageView
+        android:id="@+id/imageView6"
         android:layout_width="match_parent"
-        android:layout_height="39dp" />
+        android:layout_height="67dp"
+        app:srcCompat="@drawable/education" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="52dp"
+        android:fontFamily="@font/annie_use_your_telescope"
         android:text="Your Match"
         android:textAlignment="center"
         android:textIsSelectable="false"
-        android:textSize="24sp"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="636dp" />
+        android:layout_height="711dp" />
 
 </LinearLayout>
