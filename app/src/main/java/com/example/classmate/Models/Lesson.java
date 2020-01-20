@@ -34,8 +34,8 @@ public class Lesson {
         return teacher + "," + student;
     }
 
-    public Date getLesson_date() {
-        return lesson_date;
+    public String getLesson_date() {
+        return lesson_date.toString();
     }
 
     public void setLesson_date(Date lesson_date) {

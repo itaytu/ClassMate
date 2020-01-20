@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.classmate.Models.Lesson;
 import com.example.classmate.R;
+import com.example.classmate.Student_Activities.Lessons_adapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -50,7 +53,7 @@ public class lessons extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-        listView = v.findViewById(R.id.listView);
+        listView = v.findViewById(R.id.listview);
         lessonList = new ArrayList<>();
         uuid = firebaseAuth.getCurrentUser().getUid();
 
@@ -59,25 +62,33 @@ public class lessons extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot != null) {
-                    List<String> lesssons = (List<String>) documentSnapshot.get("myLessons");
-
-                    for (int i = 0; i < lesssons.size(); i++) {
-
-                        DocumentReference documentReferenceLessons = firestore.collection("lessons").document(lesssons.get(i));
+                    List<String> lessons = (List<String>) documentSnapshot.get("myLessons");
+                    Log.d("lesssons", "onEvent: "+lessons);
+                    for (int i = 0; i < lessons.size(); i++) {
+                        DocumentReference documentReferenceLessons = firestore.collection("lessons").document(lessons.get(i));
                         documentReferenceLessons.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
                             @Override
                             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                            String Teacher= documentSnapshot.getString("first_student");
-//                            String Student= documentSnapshot.getString();
-//                            String subject= documentSnapshot.getString();
-//                            String date= documentSnapshot.get();
+                                //TODO CHECK IF THE DATE OF LESSON IS EXPIRED
+                                if (documentSnapshot !=null) {
+                                    String Teacher = documentSnapshot.getString("teacher");
+                                    String Student = documentSnapshot.getString("second_student");
+                                    String subject = documentSnapshot.getString("subject");
+                                    Date date = (Date) documentSnapshot.get("lesson_date");
+                                    Lesson lesson = new Lesson(Teacher, Student, subject, date);
+                                    lessonList.add(lesson);
+                                    Lessons_adapter lessons_adapter = new Lessons_adapter(getActivity(), lessonList);
+                                    Log.d("Lessons_adapter", "onEvent: " + lessonList);
+                                    listView.setAdapter(lessons_adapter);
+                                }
                             }
                         });
                     }
+
                 }
+
             }
         });
-
 
         return v;
     }
