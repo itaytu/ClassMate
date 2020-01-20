@@ -25,18 +25,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19" />
+            app:layout_constraintVertical_bias="0.23000002" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="418dp"
-            android:layout_height="260dp"
+            android:layout_width="403dp"
+            android:layout_height="300dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.44">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/profileName"
@@ -44,9 +43,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="45dp"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
                 android:fontFamily="@font/annie_use_your_telescope"
                 android:text="Your Name : "
-                android:textSize="18sp" />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/profileEmail"
@@ -55,8 +56,10 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/annie_use_your_telescope"
+                android:drawableLeft="@drawable/email"
                 android:text="Your Email Address : "
-                android:textSize="18sp" />
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/profilePhoneNumber"
@@ -66,7 +69,9 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/annie_use_your_telescope"
                 android:text="Phone Number : "
-                android:textSize="18sp" />
+                android:drawableLeft="@drawable/phone"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/skills"
@@ -75,8 +80,10 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/annie_use_your_telescope"
+                android:drawableLeft="@drawable/sentiment_satisfied"
                 android:text="Skills : "
-                android:textSize="18sp" />
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/improves"
@@ -85,42 +92,54 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/annie_use_your_telescope"
+                android:drawableLeft="@drawable/ic_sentiment_dissatisfied_black_24dp"
                 android:text="Improve : "
-                android:textSize="18sp" />
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+
         </LinearLayout>
 
         <Button
             android:id="@+id/logout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="LOGOUT"
+            android:layout_marginTop="24dp"
             android:background="@drawable/custom_button"
             android:fontFamily="@font/annie_use_your_telescope"
+            android:text="LOGOUT"
             android:textAllCaps="false"
             android:textColor="#3F51B5"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.85" />
+            app:layout_constraintTop_toBottomOf="@+id/findMatch"
+            app:layout_constraintVertical_bias="0.01999998" />
 
         <Button
             android:id="@+id/findMatch"
             android:layout_width="178dp"
             android:layout_height="54dp"
-            android:text="Find Match"
             android:background="@drawable/custom_button"
             android:fontFamily="@font/annie_use_your_telescope"
+            android:text="Find Match"
             android:textAllCaps="false"
             android:textColor="#3F51B5"
             android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/logout_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.54" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="117dp"
+            android:layout_height="105dp"
+            android:src="@drawable/education"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
