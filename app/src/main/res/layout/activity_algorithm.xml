@@ -17,7 +17,6 @@
         android:id="@+id/textView6"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:fontFamily="@font/annie_use_your_telescope"
         android:text="Your Match"
         android:textAlignment="center"
         android:textIsSelectable="false"

@@ -15,7 +15,6 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/annie_use_your_telescope"
             android:text="Your Lesson Requests"
             android:textColor="#3F51B5"
             android:textSize="36sp"

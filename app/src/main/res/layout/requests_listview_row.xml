@@ -7,14 +7,12 @@
         android:id="@+id/fullName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
         android:textSize="24sp" />
 
     <TextView
         android:id="@+id/subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
         android:textSize="24sp" />
 
     <TextView
