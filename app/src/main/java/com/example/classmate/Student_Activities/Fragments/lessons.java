@@ -40,6 +40,7 @@ public class lessons extends Fragment {
 
     private String uuid;
     private List<Lesson> lessonList;
+    private Lessons_adapter lessons_adapter;
 
     public lessons() {
         // Required empty public constructor
@@ -58,6 +59,8 @@ public class lessons extends Fragment {
         lessonList = new ArrayList<>();
         uuid = firebaseAuth.getCurrentUser().getUid();
 
+
+
         DocumentReference documentReference = firestore.collection("students").document(uuid);
         documentReference.addSnapshotListener(getActivity(),new EventListener<DocumentSnapshot>() {
             @Override
@@ -65,6 +68,9 @@ public class lessons extends Fragment {
                 if (documentSnapshot != null) {
                     List<String> lessons = (List<String>) documentSnapshot.get("myLessons");
                     Log.d("lesssons", "onEvent: "+lessons);
+                    lessonList.clear();
+                    lessons_adapter = new Lessons_adapter(getActivity(), (ArrayList<Lesson>) lessonList);
+                    listView.setAdapter(lessons_adapter);
                     for (int i = 0; i < lessons.size(); i++) {
                         DocumentReference documentReferenceLessons = firestore.collection("lessons").document(lessons.get(i));
                         documentReferenceLessons.addSnapshotListener(Objects.requireNonNull(getActivity()), new EventListener<DocumentSnapshot>() {
@@ -77,10 +83,11 @@ public class lessons extends Fragment {
                                     String subject = documentSnapshot.getString("subject");
                                     Date date = (Date) documentSnapshot.get("lesson_date");
                                     Lesson lesson = new Lesson(Teacher, Student, subject, date);
-                                    lessonList.add(lesson);
-                                    Lessons_adapter lessons_adapter = new Lessons_adapter(getActivity(), lessonList);
+                                    if (!lessonList.contains(lesson)) {
+                                        lessonList.add(lesson);
+                                    }
                                     Log.d("Lessons_adapter", "onEvent: " + lessonList);
-                                    listView.setAdapter(lessons_adapter);
+                                    lessons_adapter.notifyDataSetChanged();
                                 }
                             }
                         });

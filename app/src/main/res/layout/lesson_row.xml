@@ -7,7 +7,6 @@
         android:id="@+id/teacher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/annie_use_your_telescope"
         android:textSize="18sp" />
 
     <TextView

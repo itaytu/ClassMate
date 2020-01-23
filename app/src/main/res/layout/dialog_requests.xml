@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg"
     android:orientation="vertical" >
 
     <Button
         android:id="@+id/decline_button"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:background="@android:color/holo_red_dark"
-        android:drawableLeft="@drawable/x"
+        android:background="@drawable/rounded_corners"
         android:text="Decline"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,24 +24,23 @@
         android:id="@+id/accept_button"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:background="@android:color/holo_green_light"
-        android:drawableLeft="@drawable/accept"
+        android:background="@drawable/rounded_corners_accept"
         android:text="Accept"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:layout_constraintVertical_bias="0.0" />
+
     <Button
         android:id="@+id/cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#3F51B5"
+        android:background="@drawable/rounded_corners_cancel"
         android:text="@android:string/cancel"
-        android:textColor="#FDF7F7"
-        android:drawableLeft="@drawable/cancel"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,23 +64,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:fontFamily="@font/annie_use_your_telescope"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:fontFamily="@font/annie_use_your_telescope"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:fontFamily="@font/annie_use_your_telescope"
-            android:textSize="18sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

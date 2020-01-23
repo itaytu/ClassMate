@@ -36,9 +36,9 @@ public class Algorithm_adapter extends ArrayAdapter<Student> {
         TextView weaknesses= convertView.findViewById(R.id.improve);
         Student student = getItem(position);
         if(student != null) {
-            fullName.setText(student.getFullName());
-            email.setText(student.getEmail());
-            phone.setText(student.getPhone());
+            fullName.setText("Full Name: "+student.getFullName());
+            email.setText("Email: "+student.getEmail());
+            phone.setText("Phone: "+student.getPhone());
             skill.setText("Wants to teach: " + (TextUtils.join(", ", student.getSkills())));
             weaknesses.setText("Wants to learn: " + (TextUtils.join(", ", student.getWeaknesses())));
         }
