@@ -22,12 +22,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.13999999" />
+            app:layout_constraintVertical_bias="0.050000012" />
 
         <ListView
             android:id="@+id/listview"
-            android:layout_width="393dp"
-            android:layout_height="548dp"
+            android:layout_width="372dp"
+            android:layout_height="542dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -29,7 +29,7 @@ public class Requests_adapter extends BaseAdapter {
     public Requests_adapter(Context context, ArrayList<Request> requests) {
         this.context = context;
         this.requests = new ArrayList<>();
-        this.requests.addAll(requests);
+        this.requests  =requests;
     }
 
 
